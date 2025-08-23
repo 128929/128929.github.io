@@ -1,0 +1,31 @@
+/* 响应式增强样式 */
+@media (min-width: 2000px) {
+  .layout {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+}
+
+/* 优化中等屏幕显示 */
+@media (min-width: 1200px) and (max-width: 1999px) {
+  .layout {
+    max-width: 85%;
+    margin: 0 auto;
+  }
+}
+
+/* 移动设备导航优化 */
+@media (max-width: 768px) {
+  .nav-fixed {
+    padding: 0 15px;
+  }
+
+  .menu-item {
+    margin: 0 5px;
+  }
+
+  .aside-content {
+    width: 100%;
+    max-width: 100%;
+  }
+}
