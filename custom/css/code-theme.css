@@ -1,0 +1,29 @@
+.highlight {
+  background: #2d2d2d;
+  color: #ccc;
+}
+
+.highlight .code pre {
+  color: #f8f8f2;
+}
+
+/* 代码块行号样式 */
+.highlight .gutter pre {
+  color: #999;
+  background: #3d3d3d;
+}
+
+/* 代码关键字样式 */
+.highlight .keyword {
+  color: #ff79c6;
+}
+
+/* 代码字符串样式 */
+.highlight .string {
+  color: #a7e22e;
+}
+
+/* 代码注释样式 */
+.highlight .comment {
+  color: #6272a4;
+}
