@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 (() => {
   const btfFn = {
     debounce: (func, wait = 0, immediate = false) => {
@@ -348,3 +349,6 @@
 
   window.btf = { ...window.btf, ...btfFn }
 })()
+=======
+import{a,b,c,d,e,f,g,h}from"./chunk-72ZP56JR.js";import"./chunk-FEIY7W7S.js";export{a as copyright,d as getScript,e as insertCopyCodeBtn,b as isHome,g as registerScrollPercent,h as registerToggleSidebar,f as renderKatex,c as wrapTable};
+>>>>>>> a408f848252ff1a759514f688f577469237e0337
