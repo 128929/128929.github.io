@@ -1,0 +1,293 @@
+/* 自定义样式 */
+
+/* 页面滚动条美化 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(73, 177, 245, 0.2);
+  border-radius: 2em;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #49B1F9;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.4) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.4) 75%,
+    transparent 75%,
+    transparent
+  );
+  border-radius: 2em;
+}
+
+/* 页面顶部进度条 */
+.pace {
+  pointer-events: none;
+  user-select: none;
+  z-index: 2000;
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  width: 100%;
+  background: #fff;
+}
+
+.pace .pace-progress {
+  box-sizing: border-box;
+  transform: translate3d(0, 0, 0);
+  max-width: 100%;
+  position: fixed;
+  z-index: 2000;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 100%;
+  height: 3px;
+  width: 100%;
+  background: #49B1F5;
+}
+
+/* 首页文章卡片悬停效果 */
+#recent-posts > .recent-post-item:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+}
+
+/* 文章页面标题美化 */
+.post-title {
+  position: relative;
+  padding-left: 20px;
+}
+/* 文章标题前添加竖线装饰 */
+.post-title:before {
+  content: '';
+  width: 5px;
+  height: 25px;
+  background: #49B1F5;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 5px;
+}
+
+/* 侧边栏标题美化 */
+.card-widget .card-info .card-info-social-icons span:hover {
+  color: #49B1F5 !important;
+}
+
+/* 页脚美化 */
+#footer {
+  background: rgba(73, 177, 245, 0.15);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  text-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.15);
+  position: relative;
+  padding: 2rem 1rem;
+}
+
+/* 全局渐变背景 */
+body {
+  background: #f5f5f5 !important;
+  color: #333333 !important;
+}
+
+/* 顶部渐变背景样式 */
+.top-img {
+  background: linear-gradient(135deg, #74b9ff 0%, #a29bfe 50%, #ff6b81 100%) !important;
+  background-size: 400% 400% !important;
+  animation: gradientBG 15s ease infinite !important;
+  position: relative;
+  overflow: hidden;
+  height: 400px; /* 根据需要调整高度 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 确保首页标题在渐变背景上清晰可见 */
+.top-img .site-title {
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.top-img .site-subtitle {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-size: 1.2rem;
+}
+
+/* 文本背景渐变效果 */
+.text-gradient-bg {
+  background: linear-gradient(135deg, #ff6b81 0%, #a29bfe 50%, #74b9ff 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  display: inline;
+}
+
+/* 标题背景渐变 */
+.gradient-title {
+  background: linear-gradient(135deg, #ff6b81 0%, #a29bfe 50%, #74b9ff 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  font-weight: bold;
+}
+
+/* 网站标题渐变效果 */
+#site-title {
+  background: linear-gradient(135deg, #ff6b81 0%, #a29bfe 50%, #74b9ff 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  font-weight: bold;
+}
+
+/* 文章标题渐变效果 */
+.article-title {
+  background: linear-gradient(135deg, #ff6b81 0%, #a29bfe 50%, #74b9ff 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  font-weight: bold;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 调整标题样式，确保在渐变背景上清晰可见 */
+.site-title {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 调整导航栏样式 */
+#navbar {
+  background: rgba(255, 107, 129, 0.9) !important;
+  backdrop-filter: blur(5px);
+}
+
+/* 调整页脚样式 */
+#footer {
+  background: linear-gradient(135deg, #ff6b81 0%, #a29bfe 50%, #74b9ff 100%) !important;
+  background-size: 400% 400% !important;
+  animation: gradientBG 15s ease infinite !important;
+  color: white !important;
+}
+
+/* 确保页脚文字清晰可见 */
+#footer .footer-content {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 调整链接颜色 */
+#footer a {
+  color: white !important;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.5);
+}
+
+#footer a:hover {
+  border-bottom: 1px solid white;
+}
+
+/* 全局渐变背景 - 修正版 */
+body {
+  background: linear-gradient(135deg, #0062be 0%, #925696 50%, #cc426e 75%, #fb0347 100%) fixed !important;
+  background-size: 400% 400%;
+  color: #ffffff !important; /* 确保文字颜色为白色 */
+}
+
+/* 导航栏样式调整 */
+.navbar {
+  background: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px);
+}
+
+.navbar .menu-item a {
+  color: #ffffff !important;
+}
+
+.navbar .menu-item a:hover {
+  color: #ff6b6b !important;
+}
+
+/* 内容区域样式调整 */
+.main-content {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+/* 确保标题和文字在渐变背景上可读 */
+.post-title, .post-meta, .post-content {
+  color: #ffffff !important;
+}
+
+/* 链接颜色调整 */
+a {
+  color: #a3d9ff !important;
+}
+
+a:hover {
+  color: #ff6b6b !important;
+}
+
+/* 页脚心跳动画 */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  10%, 30% { transform: scale(0.9); }
+  20%, 40%, 60%, 80% { transform: scale(1.1); }
+  50%, 70% { transform: scale(1.1); }
+}
+
+#footer #animate {
+  animation: heartbeat 1.33s ease-in-out infinite;
+  color: #ff6b6b;
+}
+
+/* 首页头像旋转 */
+.avatar-img:hover {
+  transform: rotate(360deg);
+  transition: all 1s;
+}
+
+/* 文章标题下划线 */
+.article-sort-title:before,
+.article-sort-title:after {
+  content: '';
+  width: 13px;
+  height: 2px;
+  background: #49B1F5;
+  display: inline-block;
+  margin: 0 8px;
+  vertical-align: middle;
+}
+
+/* 页面加载动画 */
+.loading-img {
+  background: url('/img/loading.gif') no-repeat center center;
+  background-size: cover;
+}
