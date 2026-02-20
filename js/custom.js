@@ -2,6 +2,13 @@
 
 // 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
+  (function ensureWebBg(){
+    if (!document.getElementById('web_bg')) {
+      var bg = document.createElement('div')
+      bg.id = 'web_bg'
+      document.body.insertBefore(bg, document.body.firstChild)
+    }
+  })()
   // 添加页脚心跳效果
   const footer = document.getElementById('footer');
   if (footer) {
