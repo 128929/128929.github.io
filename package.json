@@ -1,0 +1,16 @@
+{
+  "name": "128929.github.io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lint setup for static site output",
+  "scripts": {
+    "lint:eslint": "eslint --ext .js ./js",
+    "lint:htmlhint": "htmlhint \"**/*.html\"",
+    "lint": "npm run lint:eslint && npm run lint:htmlhint"
+  },
+  "devDependencies": {
+    "eslint": "^9.12.0",
+    "eslint-plugin-html": "^8.1.1",
+    "htmlhint": "^1.2.6"
+  }
+}

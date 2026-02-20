@@ -93,7 +93,11 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   const header = document.getElementById('page-header');
-  if (header && /butterfly-top\.jpg/.test(header.style.backgroundImage)) {
+  if (
+    header && /butterfly-top\.jpg/.test(header.style.backgroundImage) &&
+    typeof window.GLOBAL_CONFIG_SITE !== 'undefined' &&
+    window.GLOBAL_CONFIG_SITE.pageType === 'home'
+  ) {
     header.style.backgroundImage = "url('/img/placeholder.jpg')";
   }
 

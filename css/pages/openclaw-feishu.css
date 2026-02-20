@@ -1,5 +1,7 @@
 .openclaw-feishu { --bg:#ffffff; --bg-sub:#fafbfc; --text:#1f2329; --text-sub:#646a73; --text-disabled:#b8bcc8; --brand:#3370ff; }
 .openclaw-feishu .post-body { display:grid; grid-template-columns: minmax(0,1fr); gap:24px; }
+.openclaw-feishu-page .layout { display:grid; grid-template-columns: minmax(0,1fr) clamp(320px, 30%, 420px); gap:24px; align-items:start; }
+.openclaw-feishu-page #aside-content { align-self:start; }
 .openclaw-feishu .toc-container { background: var(--bg-sub); border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); padding:16px; text-align:left; }
 .openclaw-feishu .article-content { background: var(--bg); border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); padding:16px; color: var(--text); }
 .openclaw-feishu .article-content h2 { margin:16px 0; }
@@ -18,6 +20,7 @@
 .openclaw-feishu .p16 { padding:16px; }
 .openclaw-feishu .p24 { padding:24px; }
 @media (max-width: 768px) { .openclaw-feishu .post-body { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .openclaw-feishu-page .layout { grid-template-columns: 1fr; } }
 .openclaw-feishu .blog { width:100%; padding:10px 20px; }
 .openclaw-feishu .blog .title { color: var(--text); font-size:20px; font-weight:700; text-align:center; padding:10px 0; }
 .openclaw-feishu .blog .desc { color: var(--text); text-indent:2em; margin-top:10px; }
