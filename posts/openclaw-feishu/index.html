@@ -143,7 +143,6 @@
         <div class="post-meta"><span><i class="far fa-calendar-alt"></i> 2026-02-20</span> <span class="article-meta-separator">|</span> <span><i class="fas fa-inbox"></i> 教程</span></div>
       </div>
       <div class="post-body">
-        <aside class="toc-container" id="toc-container"><div class="toc-title">目录</div><ul class="toc-list" id="toc-list"></ul></aside>
         <div class="article-content" id="article-content"></div>
       </div>
     </article>
@@ -161,7 +160,19 @@
     const toId = s => s.replace(/\s+/g,'-').replace(/[^\w\-\u4e00-\u9fa5]/g,'')
     fetch('/articles/openclaw-feishu.txt').then(r=>r.text()).then(t=>{
       const lines = t.split(/\r?\n/)
-      const content = document.getElementById('article-content')
+      const contentWrap = document.getElementById('article-content')
+      const blog = document.createElement('div')
+      blog.className = 'blog'
+      blog.innerHTML = `
+        <h2 class="title">在 Linux 上从零搭建 OpenClaw + 飞书机器人，并跑通代理（Clash/Mihomo）</h2>
+        <div class="date">2026-02-20</div>
+        <p class="desc">完整教程：Node/nvm、OpenClaw、飞书插件安装与修复、Gateway 启停、代理配置（Clash/Mihomo）、Wayland 权限与一键验收脚本。</p>
+        <a class="detail" href="#article-text-body">查看详情</a>
+      `
+      contentWrap.appendChild(blog)
+      const content = document.createElement('div')
+      content.id = 'article-text-body'
+      contentWrap.appendChild(content)
       const toc = document.getElementById('toc-list')
       let buf = []
       const flushPara = () => {
@@ -198,14 +209,14 @@
           a.href = `#${id}`
           a.textContent = s
           li.appendChild(a)
-          toc.appendChild(li)
+          if (toc) toc.appendChild(li)
           return
         }
         if (isCmd(s)) { flushPara(); codeBuf.push(s); return }
         buf.push(s)
       })
       flushPara(); flushCode()
-      document.querySelectorAll('pre code').forEach(block=>{ try { hljs.highlightElement(block) } catch(e){} })
+      document.querySelectorAll('#article-text-body pre code').forEach(block=>{ try { hljs.highlightElement(block) } catch(e){} })
     }).catch(()=>{
       document.getElementById('article-content').textContent = '无法加载文章正文。'
     })
