@@ -291,3 +291,16 @@ a:hover {
   background: url('/img/loading.gif') no-repeat center center;
   background-size: cover;
 }
+.post-layout { max-width: 1000px; margin: 0 auto; padding: 20px; }
+.post-layout .post-header { margin-bottom: 12px; }
+.post-layout .post-body { display: grid; grid-template-columns: 1fr 280px; gap: 24px; align-items: start; }
+.article-content { background: rgba(255,255,255,0.85); border-radius: 10px; padding: 18px; }
+.article-content h2 { font-size: 1.4rem; margin: 20px 0 10px; }
+.article-content p { line-height: 1.9; font-size: 1rem; margin: 8px 0; }
+.article-content pre { background: #f6f8fa; border: 1px solid #e1e4e8; border-radius: 8px; padding: 12px; overflow: auto; }
+.toc-container { position: sticky; top: 90px; align-self: start; background: rgba(255,255,255,0.85); border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; }
+.toc-container .toc-title { font-weight: 600; margin-bottom: 8px; }
+.toc-container .toc-list { list-style: none; padding: 0; margin: 0; }
+.toc-container .toc-list li { margin: 6px 0; }
+.toc-container .toc-list a { color: #2563eb; text-decoration: none; }
+.toc-container .toc-list a:hover { text-decoration: underline; }

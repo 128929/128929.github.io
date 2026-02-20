@@ -100,6 +100,58 @@ document.addEventListener('DOMContentLoaded', function() {
   const html = document.documentElement;
   html.classList.remove('hide-aside');
   try { localStorage.removeItem('aside-status'); } catch (e) {}
+  const removeHrefs = ['/posts/f0d8e1c0/','/posts/d85c4342/','/posts/68534d0c/','/posts/4a17b156/','/posts/5c2fafc7/','/2025/08/23/第一篇文章/','/2025/08/23/hello-world/'];
+  document.querySelectorAll('a[href]').forEach(a => {
+    const href = a.getAttribute('href') || '';
+    if (removeHrefs.some(h => href.includes(h))) {
+      const item = a.closest('.recent-post-item, .article-item, .post-item, li, .card, .block');
+      if (item) item.remove();
+    }
+  });
+  const homeItems = document.querySelectorAll('#recent-posts .recent-post-item');
+  const countEl = document.querySelector('#sidebar .site-data a[href="/archives/"] .length-num');
+  if (countEl) countEl.textContent = String(homeItems.length);
+
+  const recentList = document.querySelector('#recent-posts .recent-post-items');
+  if (recentList && !document.querySelector('a.article-title[href="/posts/openclaw-feishu/"]')) {
+    const item = document.createElement('div');
+    item.className = 'recent-post-item';
+    item.innerHTML = `
+      <div class="post_cover left">
+        <a href="/posts/openclaw-feishu/" title="在 Linux 上从零搭建 OpenClaw + 飞书机器人，并跑通代理（Clash/Mihomo）：完整教程与踩坑修复">
+          <img class="post-bg" src="/img/loading.gif" data-lazy-src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OpenClaw + 飞书教程">
+        </a>
+      </div>
+      <div class="recent-post-info">
+        <a class="article-title" href="/posts/openclaw-feishu/" title="在 Linux 上从零搭建 OpenClaw + 飞书机器人，并跑通代理（Clash/Mihomo）：完整教程与踩坑修复">在 Linux 上从零搭建 OpenClaw + 飞书机器人，并跑通代理（Clash/Mihomo）：完整教程与踩坑修复</a>
+        <div class="article-meta-wrap">
+          <span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-02-20T00:00:00.000Z" title="发表于 2026-02-20 00:00:00">2026-02-20</time></span>
+          <span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%99%E7%A8%8B/">教程</a></span>
+        </div>
+        <div class="content">完整教程：Node/nvm、OpenClaw、飞书插件安装与修复、Gateway 启停、代理配置（Clash/Mihomo）、Wayland 权限与一键验收脚本。</div>
+      </div>
+    `;
+    recentList.prepend(item);
+  }
+
+  const asideRecent = document.querySelector('.card-recent-post .aside-list');
+  if (asideRecent && !document.querySelector('.card-recent-post .aside-list a.title[href="/posts/openclaw-feishu/"]')) {
+    const asideItem = document.createElement('div');
+    asideItem.className = 'aside-list-item';
+    asideItem.innerHTML = `
+      <a class="thumbnail" href="/posts/openclaw-feishu/" title="OpenClaw + 飞书教程">
+        <img src="/img/loading.gif" data-lazy-src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OpenClaw + 飞书教程"/>
+      </a>
+      <div class="content">
+        <a class="title" href="/posts/openclaw-feishu/" title="在 Linux 上从零搭建 OpenClaw + 飞书机器人，并跑通代理（Clash/Mihomo）：完整教程与踩坑修复">在 Linux 上从零搭建 OpenClaw + 飞书机器人，并跑通代理（Clash/Mihomo）：完整教程与踩坑修复</a>
+        <time datetime="2026-02-20T00:00:00.000Z" title="发表于 2026-02-20 00:00:00">2026-02-20</time>
+      </div>
+    `;
+    asideRecent.prepend(asideItem);
+  }
+  const countEl2 = document.querySelector('#sidebar .site-data a[href="/archives/"] .length-num');
+  const homeItems2 = document.querySelectorAll('#recent-posts .recent-post-item');
+  if (countEl2) countEl2.textContent = String(homeItems2.length);
 });
 
 // 添加网站运行时间统计

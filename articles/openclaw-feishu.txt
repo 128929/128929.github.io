@@ -1,0 +1,348 @@
+目录（TOC）
+
+准备工作与目标
+你最终想实现的是：
+
+成功标准：
+
+安装 Node（nvm）与验证
+操作
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source ~/.bashrc
+nvm -v
+预期输出 / 成功标准
+
+安装 Node 并切换使用
+你当时安装 LTS 过程中被中断过，最终选用 Node 24：
+
+nvm install 24
+nvm use 24
+node -v
+npm -v
+成功标准：
+
+安装 OpenClaw 与基础验证
+操作
+npm i -g openclaw
+openclaw --help
+预期输出 / 成功标准
+
+坑：npm 报 spawn git ENOENT
+如果安装某些包时遇到：
+
+解决：安装 git
+
+sudo apt update
+sudo apt install -y git
+成功标准：
+
+安装 Feishu 插件与常见错误修复
+关键点：npm scope 包名必须小写
+你一开始用过：
+
+openclaw plugins install @M1heng-clawd/feishu
+会出现：
+
+正确做法（全小写）：
+
+openclaw plugins install @m1heng-clawd/feishu
+成功标准：
+
+坑：插件依赖缺失 @larksuiteoapi/node-sdk
+Gateway 日志典型报错：
+
+说明插件依赖没装全（半安装状态）。修复方式：
+
+cd ~/.openclaw/extensions/feishu
+rm -rf node_modules package-lock.json
+npm install
+node -e "require('@larksuiteoapi/node-sdk'); console.log('lark sdk ok')"
+成功标准：
+
+坑：duplicate plugin id detected（重复插件冲突）
+你日志中出现过：
+
+解决：把全局冲突的 feishu.bak 移走/删除，只保留 ~/.openclaw/extensions/feishu
+
+mv ~/.nvm/versions/node/v24.13.1/lib/node_modules/openclaw/extensions/feishu.bak \
+   ~/.nvm/versions/node/v24.13.1/lib/node_modules/openclaw/feishu.bak.disabled
+
+rm -rf ~/.nvm/versions/node/v24.13.1/lib/node_modules/openclaw/extensions/feishu.bak
+验证：
+
+ls -la ~/.openclaw/extensions | grep -i feishu || true
+成功标准：
+
+配置 Feishu：appId/appSecret/enabled/connectionMode
+按教程（clawdbot）改成 openclaw 后，配置命令如下：
+
+openclaw config set channels.feishu.appId "你的APP_ID"
+openclaw config set channels.feishu.appSecret "你的APP_SECRET"
+openclaw config set channels.feishu.enabled true
+openclaw config set channels.feishu.connectionMode websocket
+验证配置是否写入：
+
+openclaw config get channels.feishu
+成功标准：
+
+启动/重启 Gateway：为什么 systemctl restart 找不到
+你曾执行：
+
+sudo systemctl restart openclaw-gateway.service
+报错：
+
+原因：OpenClaw Gateway 安装成 systemd user service，应当用 --user 或 openclaw 自带命令。
+
+正确做法 1（推荐）：
+
+openclaw gateway restart
+正确做法 2：
+
+systemctl --user restart openclaw-gateway.service
+systemctl --user status openclaw-gateway.service --no-pager
+成功标准：
+
+飞书 pairing 授权：解决 access not configured
+飞书里机器人曾回复：
+
+在 Linux 上执行：
+
+openclaw pairing approve feishu XBFTGTBH
+成功标准：
+
+飞书权限 scopes 报错 99991672：怎么处理
+你后续遇到：
+
+这不是 Linux 问题，而是飞书应用权限不足。解决要去飞书开发者后台：
+
+成功标准：
+
+代理环境：Clash/Mihomo + clashctl，订阅 URL 正确落地
+你已经能：
+
+clashctl on
+clashctl proxy
+并看到环境变量：
+
+坑：clashctl sub 永远显示空
+你尝试写 profiles.yaml、改 .env，clashctl sub 仍显示：
+
+use:
+profiles:
+最终结论：你当前版本的 clashctl sub 只是占位输出，不影响内核加载。
+
+正解：把订阅直接写入 mihomo 的 config.yaml 并重启
+你最终跑通的一条命令（核心步骤）：
+
+sudo bash -lc 'URL="https://5xj3y.no-mad-world.club/link/6kklnr7vMMiPRDnT?clash=3&extend=1"; DIR="/opt/clashctl"; CFG="$DIR/config.yaml"; curl -fsSL "$URL" -o "$CFG" && chmod 644 "$CFG" && (systemctl restart mihomo 2>/dev/null || systemctl restart clash 2>/dev/null || true) && echo "OK: wrote $CFG"'
+验证端口：
+
+ss -lntp | grep -E '7890|9090' || true
+验证外网：
+
+clashctl proxy
+curl -I https://github.com
+成功标准：
+
+Wayland 录屏/录音权限：Linux 对应 macOS 的做法
+你环境是：
+
+echo $XDG_SESSION_TYPE
+# wayland
+Wayland 下录屏/共享权限靠 portal + pipewire。
+
+安装：
+
+sudo apt update
+sudo apt install -y xdg-desktop-portal xdg-desktop-portal-gnome pipewire wireplumber
+systemctl --user restart xdg-desktop-portal.service
+成功标准：
+
+最终你实现了什么？
+你最终实现了：
+
+脚本：install.sh（安装/初始化）
+
+创建文件：
+
+cat > install.sh <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[1/7] Install base deps"
+sudo apt update
+sudo apt install -y curl git ca-certificates
+
+echo "[2/7] Install nvm"
+export NVM_VERSION="v0.40.3"
+curl -fsSL "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh" | bash
+
+# load nvm for current shell
+export NVM_DIR="$HOME/.nvm"
+# shellcheck disable=SC1091
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+echo "[3/7] Install Node 24"
+nvm install 24
+nvm use 24
+
+echo "[4/7] Install OpenClaw"
+npm i -g openclaw
+
+echo "[5/7] Install Feishu plugin"
+openclaw plugins install @m1heng-clawd/feishu || true
+
+echo "[6/7] Fix plugin deps if needed"
+if [ -d "$HOME/.openclaw/extensions/feishu" ]; then
+  cd "$HOME/.openclaw/extensions/feishu"
+  rm -rf node_modules package-lock.json
+  npm install
+  node -e "require('@larksuiteoapi/node-sdk'); console.log('lark sdk ok')"
+fi
+
+echo "[7/7] Set Feishu config (PLEASE EDIT appId/appSecret first)"
+echo "Run:"
+echo '  openclaw config set channels.feishu.appId "YOUR_APP_ID"'
+echo '  openclaw config set channels.feishu.appSecret "YOUR_APP_SECRET"'
+echo '  openclaw config set channels.feishu.enabled true'
+echo '  openclaw config set channels.feishu.connectionMode websocket'
+echo "Then restart gateway:"
+echo '  openclaw gateway restart'
+EOF
+
+chmod +x install.sh
+执行：
+
+./install.sh
+
+脚本：fix.sh（修复/重启/验证）
+
+创建文件：
+
+cat > fix.sh <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[1/6] Check node/npm"
+command -v node && node -v
+command -v npm && npm -v
+
+echo "[2/6] Fix feishu plugin deps"
+if [ -d "$HOME/.openclaw/extensions/feishu" ]; then
+  cd "$HOME/.openclaw/extensions/feishu"
+  rm -rf node_modules package-lock.json
+  npm install
+  node -e "require('@larksuiteoapi/node-sdk'); console.log('lark sdk ok')"
+else
+  echo "No local feishu plugin dir found: ~/.openclaw/extensions/feishu"
+fi
+
+echo "[3/6] Restart gateway (user service)"
+openclaw gateway restart || systemctl --user restart openclaw-gateway.service
+
+echo "[4/6] Show last logs"
+journalctl --user -u openclaw-gateway.service -n 60 --no-pager || true
+
+echo "[5/6] Proxy env (if clashctl exists)"
+if command -v clashctl >/dev/null 2>&1; then
+  clashctl on || true
+  clashctl proxy || true
+fi
+
+echo "[6/6] Network test"
+curl -I https://github.com | head -n 5
+EOF
+
+chmod +x fix.sh
+执行：
+
+./fix.sh
+
+（可选）订阅一键更新脚本：update-sub.sh
+如果你想以后“换订阅 URL”一条命令更新并重启：
+
+cat > update-sub.sh <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+URL="${1:-}"
+if [ -z "$URL" ]; then
+  echo "Usage: ./update-sub.sh '<SUB_URL>'"
+  exit 1
+fi
+sudo bash -lc "curl -fsSL '$URL' -o /opt/clashctl/config.yaml && chmod 644 /opt/clashctl/config.yaml && (systemctl restart mihomo 2>/dev/null || systemctl restart clash 2>/dev/null || true) && echo OK"
+ss -lntp | grep -E '7890|9090' || true
+curl -I https://github.com | head -n 5
+EOF
+
+chmod +x update-sub.sh
+用法：
+
+./update-sub.sh 'https://你的订阅链接...'
+
+最后验收 Checklist：确认飞书消息能进 Gateway、能路由到 Agent
+14.1 确认 Gateway 正在运行（user service）
+systemctl --user status openclaw-gateway.service --no-pager
+预期输出 / 成功标准：
+
+14.2 看最新日志，确认 Feishu WebSocket 已连上
+journalctl --user -u openclaw-gateway.service -n 120 --no-pager
+预期输出 / 成功标准：
+
+如果看到 Cannot find module '@larksuiteoapi/node-sdk'：回到前面 fix.sh 的插件依赖修复步骤。
+
+14.3 飞书端发一条消息，验证 Gateway 收到了
+在飞书里给机器人发一句：ping（或“你好”）。
+
+然后立刻在 Linux 上看日志尾部：
+
+journalctl --user -u openclaw-gateway.service -n 60 --no-pager
+预期输出 / 成功标准：
+
+14.4 解决 “Unknown target agent:main:main”/ target 格式问题
+这个提示的意思是：在某些发送动作里，Feishu 通道需要明确目标格式。
+
+判断成功标准：
+
+Dashboard / TUI 打开方式（你截图里的命令在 Linux 的对应）
+你截图里是 clawdbot dashboard / tui，你现在实际是 openclaw，对应命令就是：
+
+openclaw dashboard
+openclaw tui
+成功标准：
+
+一键验收脚本：verify.sh（推荐）
+把下面保存成 verify.sh，它会自动检查：
+
+cat > verify.sh <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "== [1] Gateway status =="
+systemctl --user status openclaw-gateway.service --no-pager | sed -n '1,12p' || true
+echo
+
+echo "== [2] Recent gateway logs (search feishu/ws/errors) =="
+journalctl --user -u openclaw-gateway.service -n 200 --no-pager | \
+  egrep -i "feishu|websocket|ws client|received message|dispatching|error|permission|99991672|Cannot find module" || true
+echo
+
+echo "== [3] Ports check (7890/9090) =="
+ss -lntp | grep -E '7890|9090' || echo "No 7890/9090 listening"
+echo
+
+echo "== [4] Proxy env =="
+env | egrep -i 'http_proxy|https_proxy|all_proxy|no_proxy' || echo "No proxy env vars"
+echo
+
+echo "== [5] Network test (github) =="
+curl -I https://github.com | head -n 8
+echo
+echo "OK: verify done"
+EOF
+
+chmod +x verify.sh
+./verify.sh
+成功标准（最重要 3 条）：
+
+你现在下一步该做什么（建议顺序）
+接下来建议按序完成权限、网关、代理配置的核验与联调。
