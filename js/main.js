@@ -468,103 +468,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!($article && (isToc || isAnchor))) return
 
-    let $tocLink, $cardToc, autoScrollToc, $tocPercentage, isExpand
+    let $cardToc, $tocPercentage
 
     if (isToc) {
       const $cardTocLayout = document.getElementById('card-toc')
       $cardToc = $cardTocLayout.querySelector('.toc-content')
-      $tocLink = $cardToc.querySelectorAll('.toc-link')
       $tocPercentage = $cardTocLayout.querySelector('.toc-percentage')
-      isExpand = $cardToc.classList.contains('is-expand')
-
-      // toc元素點擊
-      const tocItemClickFn = e => {
-        const target = e.target.closest('.toc-link')
-        if (!target) return
-
-        e.preventDefault()
-        btf.scrollToDest(btf.getEleTop(document.getElementById(decodeURI(target.getAttribute('href')).replace('#', ''))), 300)
-        if (window.innerWidth < 900) {
-          $cardTocLayout.classList.remove('open')
-        }
-      }
-
-      btf.addEventListenerPjax($cardToc, 'click', tocItemClickFn)
-
-      autoScrollToc = item => {
-        const sidebarHeight = $cardToc.clientHeight
-        const itemOffsetTop = item.offsetTop
-        const itemHeight = item.clientHeight
-        const scrollTop = $cardToc.scrollTop
-        const offset = itemOffsetTop - scrollTop
-        const middlePosition = (sidebarHeight - itemHeight) / 2
-
-        if (offset !== middlePosition) {
-          $cardToc.scrollTop = scrollTop + (offset - middlePosition)
-        }
-      }
-
-      // 處理 hexo-blog-encrypt 事件
       $cardToc.style.display = 'block'
-    }
-
-    // find head position & add active class
-    const $articleList = $article.querySelectorAll('h1,h2,h3,h4,h5,h6')
-    let detectItem = ''
-
-    const findHeadPosition = top => {
-      if (top === 0) return false
-
-      let currentId = ''
-      let currentIndex = ''
-
-      for (let i = 0; i < $articleList.length; i++) {
-        const ele = $articleList[i]
-        if (top > btf.getEleTop(ele) - 80) {
-          const id = ele.id
-          currentId = id ? '#' + encodeURI(id) : ''
-          currentIndex = i
-        } else {
-          break
-        }
-      }
-
-      if (detectItem === currentIndex) return
-
-      if (isAnchor) btf.updateAnchor(currentId)
-
-      detectItem = currentIndex
-
-      if (isToc) {
-        $cardToc.querySelectorAll('.active').forEach(i => i.classList.remove('active'))
-
-        if (currentId) {
-          const currentActive = $tocLink[currentIndex]
-          currentActive.classList.add('active')
-
-          setTimeout(() => autoScrollToc(currentActive), 0)
-
-          if (!isExpand) {
-            let parent = currentActive.parentNode
-            while (!parent.matches('.toc')) {
-              if (parent.matches('li')) parent.classList.add('active')
-              parent = parent.parentNode
-            }
-          }
-        }
+      if (typeof window.initTocObserver === 'function') {
+        window.initTocObserver({ container: '#article-container', tocSelector: '#card-toc .toc-content .toc' })
       }
     }
 
-    // main of scroll
-    const tocScrollFn = btf.throttle(() => {
+    const tocPercentScrollFn = btf.throttle(() => {
       const currentTop = window.scrollY || document.documentElement.scrollTop
       if (isToc && GLOBAL_CONFIG.percent.toc) {
         $tocPercentage.textContent = btf.getScrollPercent(currentTop, $article)
       }
-      findHeadPosition(currentTop)
+      const recentPercentageEle = document.querySelector('.card-recent-post .recent-percentage')
+      if (recentPercentageEle) {
+        recentPercentageEle.textContent = btf.getScrollPercent(currentTop, $article)
+      }
     }, 100)
 
-    btf.addEventListenerPjax(window, 'scroll', tocScrollFn, { passive: true })
+    btf.addEventListenerPjax(window, 'scroll', tocPercentScrollFn, { passive: true })
   }
 
   const handleThemeChange = mode => {
@@ -913,6 +840,17 @@ document.addEventListener('DOMContentLoaded', () => {
     forPostFn()
     GLOBAL_CONFIG_SITE.pageType !== 'shuoshuo' && btf.switchComments(document)
     openMobileMenu()
+
+    const setRecentOffset = () => {
+      const toc = document.getElementById('card-toc')
+      const scope = document.querySelector('.openclaw-feishu')
+      if (toc && scope) {
+        const h = toc.getBoundingClientRect().height
+        scope.style.setProperty('--recent-offset', `${96 + h + 16}px`)
+      }
+    }
+    setRecentOffset()
+    window.addEventListener('resize', btf.debounce(setRecentOffset, 200))
   }
 
   btf.addGlobalFn('pjaxComplete', refreshFn, 'refreshFn')

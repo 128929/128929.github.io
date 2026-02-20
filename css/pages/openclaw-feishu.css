@@ -1,17 +1,23 @@
-.openclaw-feishu { --bg:#ffffff; --bg-sub:#fafbfc; --text:#1f2329; --text-sub:#646a73; --text-disabled:#b8bcc8; --brand:#3370ff; }
-.openclaw-feishu .post-body { display:grid; grid-template-columns: minmax(0,1fr); gap:24px; }
-.openclaw-feishu-page .layout { display:grid; grid-template-columns: minmax(0,1fr) clamp(320px, 30%, 420px); gap:24px; align-items:start; }
-.openclaw-feishu-page #aside-content { align-self:start; }
-.openclaw-feishu .toc-container { background: var(--bg-sub); border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); padding:16px; text-align:left; }
+.openclaw-feishu { --bg:#ffffff; --bg-sub:#fafbfc; --text:#1f2329; --text-sub:#646a73; --text-disabled:#b8bcc8; --brand:#3370ff; --recent-offset: 200px; }
+.openclaw-feishu .post-body { display:grid; grid-template-columns: minmax(0,1fr); gap:24px; align-items:start; }
+.openclaw-feishu-page .layout { gap:24px; }
+.openclaw-feishu #card-toc { position: sticky; top:96px; z-index:0; }
+.openclaw-feishu .card-recent-post { position: sticky; top: var(--recent-offset); z-index:0; }
+.openclaw-feishu #card-toc .toc-content,
+.openclaw-feishu .card-recent-post .aside-list { max-height: calc(100vh - 140px); overflow:auto; }
+.openclaw-feishu #card-toc .item-headline,
+.openclaw-feishu .card-recent-post .item-headline { position: relative; }
+.openclaw-feishu #card-toc .toc-percentage,
+.openclaw-feishu .card-recent-post .recent-percentage { position: absolute; right: 16px; top: 0; height: 100%; display: flex; align-items: center; color: var(--text-disabled); font-weight: 700; }
 .openclaw-feishu .article-content { background: var(--bg); border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); padding:16px; color: var(--text); }
 .openclaw-feishu .article-content h2 { margin:16px 0; }
 .openclaw-feishu .toc-container .toc-list { list-style:none; padding:0; margin:0; }
 .openclaw-feishu .toc-container .toc-list li { margin:8px 0; }
-.openclaw-feishu .toc-container .toc-list a { color: var(--brand); text-decoration:none; }
+.openclaw-feishu #card-toc .toc-content .toc a { color: var(--brand); text-decoration:none; display:block; line-height:1.6; }
 .openclaw-feishu .toc-container .toc-list a:hover { color:#2c63e6; }
 .openclaw-feishu .post-title { color: var(--text); }
 .openclaw-feishu .post-meta { color: var(--text-sub); }
-.openclaw-feishu img { width:100%; height:auto; object-fit:cover; border-radius:8px; }
+.openclaw-feishu img { display:block; width:100%; height:auto; object-fit:cover; border-radius:8px; }
 .openclaw-feishu .m0 { margin:0; }
 .openclaw-feishu .m8 { margin:8px; }
 .openclaw-feishu .m16 { margin:16px; }
@@ -27,3 +33,28 @@
 .openclaw-feishu .blog .date { color:#008000; margin-top:10px; text-align:center; }
 .openclaw-feishu .blog .detail { display:block; width:120px; height:40px; line-height:40px; color: var(--text); text-align:center; text-decoration:none; margin:10px auto 0 auto; border:2px solid var(--text); transition: all 0.3s; border-radius:8px; }
 .openclaw-feishu .blog .detail:hover { background-color: var(--text); color:#fff; }
+@media (max-width: 900px) {
+  .openclaw-feishu-page #aside-content #card-toc {
+    position: sticky;
+    top: 72px;
+    right: auto;
+    bottom: auto;
+    z-index: 10;
+    max-width: 100%;
+    width: auto;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -o-transform: none;
+    -ms-transform: none;
+    transform: none;
+  }
+  .openclaw-feishu .card-recent-post {
+    position: sticky;
+    top: 120px;
+    z-index: 0;
+  }
+  .openclaw-feishu #card-toc .toc-content,
+  .openclaw-feishu .card-recent-post .aside-list { 
+    max-height: calc(100vh - 160px);
+  }
+}

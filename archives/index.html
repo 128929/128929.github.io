@@ -162,7 +162,15 @@
   isToc: false,
   pageType: 'archive'
 }</script><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap"><link rel="stylesheet" href="/custom/css/code-theme.css"><link rel="stylesheet" href="/custom/css/responsive.css"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Tutu's Blog" type="application/atom+xml">
-</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+</head><style>
+/* 仅在归档页隐藏两套主题的头像图片 */
+#sidebar-menus .avatar-img { display: none !important; }
+.sidebar .site-info .site-author-avatar { display: none !important; }
+/* 移除左侧黑色列（Hexo Theme Yun 侧边栏） */
+.container .sidebar { display: none !important; }
+.sidebar-toggle, .sidebar-overlay { display: none !important; }
+canvas.fireworks { display: none !important; }
+</style><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
   const $loadingBox = document.getElementById('loading-box')
   const $body = document.body
   const preloader = {

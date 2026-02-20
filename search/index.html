@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>站内搜索 - Tutu's Blog</title>
+  <style>
+    :root{
+      --bg:#131b33;
+      --card:rgba(28,38,68,.78);
+      --border:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.90);
+      --muted:rgba(255,255,255,.70);
+      --accent:rgba(165,200,255,.98);
+      --hover:rgba(255,255,255,.06);
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "PingFang SC","Microsoft YaHei", sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:24px 16px 56px}
+    .top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{color:rgba(255,186,120,.95)}
+    .card{
+      margin-top:16px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.22);
+      backdrop-filter: blur(10px);
+      padding:16px;
+    }
+    .searchbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    input{
+      width:min(720px, 100%);
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      outline:none;
+      font-size:16px;
+    }
+    input:focus{border-color:rgba(165,200,255,.55)}
+    button{
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      cursor:pointer;
+    }
+    button:hover{border-color:rgba(165,200,255,.45); background:rgba(165,200,255,.12)}
+    .hint{color:var(--muted);font-size:13px;line-height:1.6}
+    .meta{color:var(--muted);font-size:12px;margin-top:6px}
+    .item{padding:14px 10px;border-radius:12px}
+    .item:hover{background:var(--hover)}
+    .title{font-size:16px;font-weight:650;line-height:1.35}
+    .excerpt{color:var(--muted);font-size:13px;line-height:1.6;margin-top:8px}
+    .empty{color:var(--muted);padding:18px 10px}
+    .footer{margin-top:14px;color:var(--muted);font-size:12px}
+    .badge{display:inline-block;padding:3px 8px;border:1px solid var(--border);border-radius:999px;margin-left:8px;font-size:12px;color:var(--muted)}
+    mark{background:rgba(165,200,255,.25);color:var(--text);padding:0 3px;border-radius:4px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div style="font-size:20px;font-weight:750;">站内搜索 <span class="badge" id="idxStatus">加载中</span></div>
+        <div class="hint">本页会自动读取 <code>/search.json</code> 或 <code>/search.xml</code>。如果都不存在，会提示你去生成索引。</div>
+      </div>
+      <div><a href="/">← 返回首页</a></div>
+    </div>
+
+    <div class="card">
+      <div class="searchbar">
+        <input id="q" placeholder="输入关键词，回车搜索…" autocomplete="off"/>
+        <button id="btn">搜索</button>
+      </div>
+      <div class="meta" id="meta"></div>
+    </div>
+
+    <div class="card" id="results"></div>
+    <div class="footer" id="footer"></div>
+  </div>
+
+<script>
+(function(){
+  const $ = (s)=>document.querySelector(s);
+  const qEl = $("#q"), btn = $("#btn"), results = $("#results"), meta = $("#meta"), idxStatus = $("#idxStatus"), footer = $("#footer");
+  let index = []; // {title, content, url, date}
+
+  const debounce = (fn, wait)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); }; };
+  const escapeHtml = (str)=> (str||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const stripHtml = (str)=> (str||"").replace(/<[^>]*>/g, " ").replace(/\s+/g," ").trim();
+
+  async function tryFetch(url){
+    const r = await fetch(url, {cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    return r;
+  }
+
+  async function loadIndex(){
+    // 1) /search.json
+    try{
+      const r = await tryFetch("/search.json");
+      const j = await r.json();
+      const arr = Array.isArray(j) ? j : (j.data || j.posts || []);
+      index = arr.map(x=>({
+        title: x.title || "",
+        content: x.content || x.text || "",
+        url: x.url || x.path || "",
+        date: x.date || x.updated || ""
+      }));
+      idxStatus.textContent = "search.json";
+      return true;
+    }catch(e){}
+
+    // 2) /search.xml
+    try{
+      const r = await tryFetch("/search.xml");
+      const txt = await r.text();
+      const xml = new DOMParser().parseFromString(txt, "text/xml");
+      const entries = Array.from(xml.getElementsByTagName("entry"));
+      index = entries.map(ent=>({
+        title: (ent.getElementsByTagName("title")[0]?.textContent)||"",
+        content: (ent.getElementsByTagName("content")[0]?.textContent)||"",
+        url: (ent.getElementsByTagName("url")[0]?.textContent)||"",
+        date: (ent.getElementsByTagName("updated")[0]?.textContent)||""
+      }));
+      idxStatus.textContent = "search.xml";
+      return true;
+    }catch(e){}
+
+    idxStatus.textContent = "未找到索引";
+    footer.innerHTML = '未检测到 <code>/search.json</code> 或 <code>/search.xml</code>。请在 Hexo 源站生成索引后重新生成静态文件。';
+    return false;
+  }
+
+  function renderEmpty(msg){
+    results.innerHTML = '<div class="empty">'+escapeHtml(msg)+'</div>';
+  }
+
+  function score(item, kw){
+    const t = (item.title||"").toLowerCase();
+    const c = stripHtml(item.content||"").toLowerCase();
+    const k = kw.toLowerCase();
+    let s = 0;
+    if(t.includes(k)) s += 8;
+    if(c.includes(k)) s += 2;
+    return s;
+  }
+
+  function highlight(text, kw){
+    if(!kw) return escapeHtml(text);
+    const safe = escapeHtml(text);
+    const re = new RegExp(kw.replace(/[.*+?^${}()|[\\]\\]/g,'\\$&'), 'ig');
+    return safe.replace(re, m => '<mark>'+m+'</mark>');
+  }
+
+  function search(kw){
+    kw = (kw||"").trim();
+    if(!kw){ meta.textContent=""; renderEmpty("请输入关键词"); return; }
+
+    const list = index
+      .map(it => ({...it, _s: score(it, kw)}))
+      .filter(it => it._s > 0)
+      .sort((a,b)=> b._s - a._s)
+      .slice(0, 50);
+
+    meta.textContent = `关键词：${kw}｜结果：${list.length} 条｜索引：${index.length} 条`;
+    if(list.length === 0){ renderEmpty("没有匹配结果"); return; }
+
+    results.innerHTML = list.map(it=>{
+      const plain = stripHtml(it.content||"");
+      const pos = plain.toLowerCase().indexOf(kw.toLowerCase());
+      const start = Math.max(0, pos - 60);
+      const excerpt = plain.slice(start, start + 160);
+      const url = it.url.startsWith("http") ? it.url : (it.url.startsWith("/") ? it.url : "/"+it.url);
+      return `
+        <div class="item">
+          <div class="title"><a href="${url}">${highlight(it.title||"(无标题)", kw)}</a></div>
+          <div class="meta">${escapeHtml(it.date||"")}</div>
+          <div class="excerpt">${highlight(excerpt || plain.slice(0, 160), kw)}…</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  const run = ()=>search(qEl.value);
+  btn.addEventListener("click", run);
+  qEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter") run(); });
+  qEl.addEventListener("input", debounce(run, 200));
+
+  renderEmpty("正在加载索引…");
+  loadIndex().then(ok=>{
+    renderEmpty(ok ? "请输入关键词开始搜索" : "索引未生成：请生成 /search.json 或 /search.xml");
+  });
+})();
+</script>
+</body>
+</html>

@@ -344,9 +344,31 @@
         }
       }
       btf.addEventListenerPjax(switchBtn, 'click', handleSwitchBtn)
+    },
+
+    /**
+     * 更新 URL Hash 并设置当前目录项 aria-current
+     * @param {HTMLElement} linkEl
+     * @param {string} [hash]
+     */
+    updateHashAria: (linkEl, hash) => {
+      if (!linkEl) return
+      var h = hash || linkEl.getAttribute('href') || ''
+      btfFn.updateAnchor && btfFn.updateAnchor(h)
+      linkEl.setAttribute('aria-current', 'true')
     }
   }
 
   window.btf = { ...window.btf, ...btfFn }
+  // 平滑滚动 polyfill 按需加载
+  if (!('scrollBehavior' in document.documentElement.style)) {
+    if (!window.__smoothScrollPolyfillLoaded) {
+      var s = document.createElement('script')
+      s.src = 'https://cdn.jsdelivr.net/npm/smoothscroll-polyfill@0.4.4/dist/smoothscroll.min.js'
+      s.async = true
+      s.onload = function () { window.__smoothScrollPolyfillLoaded = true }
+      document.head.appendChild(s)
+    }
+  }
 })()
 

@@ -318,10 +318,20 @@
   const artalkChangeMode = theme => artalkItem && artalkItem.setDarkMode(theme === 'dark')
 
   const initArtalk = (el = document, pageKey = location.pathname) => {
+    const server = (option && option.server) || window.ARTALK_SERVER || ''
+    const site = (option && option.site) || window.ARTALK_SITE || ''
+    if (!server || !site) {
+      const wrap = el.querySelector('#artalk-wrap')
+      if (wrap) {
+        wrap.innerHTML = '<div class="no-comment-tip">评论系统未配置</div>'
+        wrap.classList.add('no-comment')
+      }
+      return
+    }
     artalkItem = Artalk.init({
       el: el.querySelector('#artalk-wrap'),
-      server: '',
-      site: '',
+      server,
+      site,
       darkMode: document.documentElement.getAttribute('data-theme') === 'dark',
       ...option,
       pageKey: isShuoshuo ? pageKey : (option && option.pageKey) || pageKey

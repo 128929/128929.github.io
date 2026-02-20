@@ -1,36 +1,13 @@
-const html = require('eslint-plugin-html');
+import vue from 'eslint-plugin-vue';
+import vueParser from 'vue-eslint-parser';
 
-module.exports = [
+export default [
   {
-    files: ['**/*.js'],
-    languageOptions: {
-      ecmaVersion: 2021,
-      sourceType: 'module',
-      globals: {
-        window: 'readonly',
-        document: 'readonly',
-        navigator: 'readonly',
-        localStorage: 'readonly'
-      }
-    },
+    files: ['src/**/*.{js,vue,ts}'],
+    languageOptions: { ecmaVersion: 2021, sourceType: 'module', parser: vueParser },
+    plugins: { vue },
     rules: {
-      semi: 'off',
-      'no-unused-vars': 'off',
-      'no-undef': 'off',
-      'no-console': 'off'
-    }
-  },
-  {
-    files: ['**/*.html'],
-    plugins: {
-      html
-    },
-    processor: 'html/html',
-    rules: {
-      semi: 'off',
-      'no-unused-vars': 'off',
-      'no-undef': 'off',
-      'no-console': 'off'
+      'no-unused-vars': 'warn'
     }
   }
-];
+]

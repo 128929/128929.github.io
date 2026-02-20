@@ -880,3 +880,424 @@ body.page-categories .artalk {
 /* ==== 从这里开始：隐藏旧粒子 canvas（如果存在） ==== */
 #particle-canvas { display: none !important; }
 /* ==== 到这里结束：隐藏旧粒子 canvas ==== */
+/* ==== 从这里开始：首页 Banner 红叶暖调点缀色增强包 ==== */
+/* 仅首页生效 */
+body[data-type="index"] {
+  --autumn-gold: rgba(255, 214, 170, 0.96);
+  --autumn-amber: rgba(255, 186, 120, 0.95);
+  --autumn-red: rgba(255, 120, 90, 0.92);
+  --autumn-line: rgba(255, 186, 120, 0.55);
+}
+
+/* 1) 顶部导航：当前项/hover 下划线与文字 */
+body[data-type="index"] #nav a:hover,
+body[data-type="index"] #nav .site-page:hover {
+  color: var(--autumn-gold) !important;
+}
+body[data-type="index"] #nav .site-page:after,
+body[data-type="index"] #nav a:after {
+  background: var(--autumn-line) !important;
+}
+
+/* 2) 首页 Banner 的滚动提示箭头（你图里中间那个向下箭头） */
+body[data-type="index"] #page-header #scroll-down,
+body[data-type="index"] #page-header .scroll-down,
+body[data-type="index"] #page-header .scroll-down .scroll-down-effects,
+body[data-type="index"] #page-header #scroll-down i,
+body[data-type="index"] #page-header .scroll-down i {
+  color: var(--autumn-amber) !important;
+  text-shadow: 0 10px 28px rgba(0,0,0,0.55);
+}
+body[data-type="index"] #page-header #scroll-down:hover,
+body[data-type="index"] #page-header .scroll-down:hover,
+body[data-type="index"] #page-header #scroll-down:hover i,
+body[data-type="index"] #page-header .scroll-down:hover i {
+  color: var(--autumn-red) !important;
+}
+
+/* 3) Banner 内链接 hover 更暖 */
+body[data-type="index"] #page-header a:hover {
+  color: var(--autumn-amber) !important;
+}
+
+/* 4) 若首页有按钮（如 Follow / 站点按钮），hover 变暖色 */
+body[data-type="index"] .button--animated,
+body[data-type="index"] .btn,
+body[data-type="index"] button,
+body[data-type="index"] input[type="button"],
+body[data-type="index"] input[type="submit"] {
+  border-color: rgba(255,186,120,0.22) !important;
+}
+body[data-type="index"] .button--animated:hover,
+body[data-type="index"] .btn:hover,
+body[data-type="index"] button:hover,
+body[data-type="index"] input[type="button"]:hover,
+body[data-type="index"] input[type="submit"]:hover {
+  background: rgba(255, 186, 120, 0.16) !important;
+  border-color: rgba(255,186,120,0.42) !important;
+  color: var(--autumn-gold) !important;
+}
+
+/* 5) 首页顶部区域若有图标（如社交 icon）hover 更贴合 */
+body[data-type="index"] .social-icon a:hover,
+body[data-type="index"] .social-icon i:hover,
+body[data-type="index"] .icon a:hover,
+body[data-type="index"] i:hover {
+  color: var(--autumn-amber) !important;
+}
+
+/* 6) 首页 Banner 标题渐变更偏暖（如果你的标题本来是渐变色） */
+body[data-type="index"] #page-header #site-title,
+body[data-type="index"] #page-header .site-title {
+  background-image: linear-gradient(90deg, rgba(255,214,170,0.96), rgba(255,170,140,0.92)) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* ==== 到这里结束：首页 Banner 红叶暖调点缀色增强包 ==== */
+/* ==== 从这里开始：主页 Banner 背景替换为秋林壁纸，并启用暖色点缀（仅首页） ==== */
+#page-header.full_page {
+  background-image: url('/img/autumn-forest.png') !important;
+  background-size: cover !important;
+  background-position: center center !important;
+}
+
+/* 顶部导航 hover 与下划线暖色（仅首页） */
+#page-header.full_page #nav a:hover,
+#page-header.full_page #nav .site-page:hover {
+  color: rgba(255, 214, 170, 0.96) !important;
+}
+#page-header.full_page #nav .site-page:after,
+#page-header.full_page #nav a:after {
+  background: rgba(255, 186, 120, 0.55) !important;
+}
+
+/* 滚动提示箭头暖色与 hover 红（仅首页） */
+#page-header.full_page #scroll-down,
+#page-header.full_page .scroll-down,
+#page-header.full_page .scroll-down .scroll-down-effects,
+#page-header.full_page #scroll-down i,
+#page-header.full_page .scroll-down i {
+  color: rgba(255, 186, 120, 0.95) !important;
+  text-shadow: 0 10px 28px rgba(0,0,0,0.55);
+}
+#page-header.full_page #scroll-down:hover,
+#page-header.full_page .scroll-down:hover,
+#page-header.full_page #scroll-down:hover i,
+#page-header.full_page .scroll-down:hover i {
+  color: rgba(255, 120, 90, 0.92) !important;
+}
+
+/* Banner 内链接/按钮 hover 暖色（仅首页） */
+#page-header.full_page a:hover { color: rgba(255, 186, 120, 0.95) !important; }
+#page-header.full_page .button--animated,
+#page-header.full_page .btn,
+#page-header.full_page button,
+#page-header.full_page input[type='button'],
+#page-header.full_page input[type='submit'] { border-color: rgba(255,186,120,0.22) !important; }
+#page-header.full_page .button--animated:hover,
+#page-header.full_page .btn:hover,
+#page-header.full_page button:hover,
+#page-header.full_page input[type='button']:hover,
+#page-header.full_page input[type='submit']:hover {
+  background: rgba(255, 186, 120, 0.16) !important;
+  border-color: rgba(255,186,120,0.42) !important;
+  color: rgba(255, 214, 170, 0.96) !important;
+}
+
+/* 社交图标 hover 暖色（仅首页） */
+#page-header.full_page .social-icon a:hover,
+#page-header.full_page .social-icon i:hover,
+#page-header.full_page .icon a:hover,
+#page-header.full_page i:hover { color: rgba(255, 186, 120, 0.95) !important; }
+
+/* 标题暖色渐变（仅首页） */
+  #page-header.full_page #site-title,
+  #page-header.full_page .site-title {
+    background-image: linear-gradient(90deg, rgba(255,214,170,0.96), rgba(255,170,140,0.92)) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+  }
+  /* ==== 到这里结束：主页 Banner 背景替换与暖色点缀 ==== */
+/* ==== 从这里开始：Footer 底部区域改暗色（覆盖粉色渐变） ==== */
+
+/* Butterfly 常见 Footer 容器 */
+#footer,
+#footer-wrap,
+#footer-bar,
+.footer,
+.footer-wrap {
+  background: rgba(10, 14, 26, 0.92) !important;
+  color: rgba(255,255,255,0.80) !important;
+  border-top: 1px solid rgba(255,255,255,0.10) !important;
+}
+
+/* 有些版本用 #footer::before / #footer::after 画上方那条渐变/圆角条，直接压暗 */
+#footer::before,
+#footer::after,
+#footer-wrap::before,
+#footer-wrap::after {
+  background: rgba(10, 14, 26, 0.92) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Footer 内文本/链接 */
+#footer a,
+#footer-wrap a,
+.footer a {
+  color: rgba(255,255,255,0.86) !important;
+  text-decoration-color: rgba(255,255,255,0.35) !important;
+}
+#footer a:hover,
+#footer-wrap a:hover,
+.footer a:hover {
+  color: rgba(255, 186, 120, 0.95) !important; /* 暖色点缀 */
+}
+
+/* Footer 内分割线/小字 */
+#footer hr,
+#footer-wrap hr,
+#footer .footer-separator,
+#footer-wrap .footer-separator {
+  border-color: rgba(255,255,255,0.10) !important;
+}
+
+/* ==== 到这里结束：Footer 底部区域改暗色 ==== */
+/* ==== 从这里开始：Butterfly 全站暗色适配兜底包（归档/列表/分页/时间线等） ==== */
+
+/* 0) 全局暗色变量（方便统一调） */
+:root{
+  --dark-bg: #131b33;
+  --dark-panel: rgba(28, 38, 68, 0.78);
+  --dark-panel-strong: rgba(18, 24, 44, 0.92);
+  --dark-border: rgba(255,255,255,0.10);
+  --dark-text: rgba(255,255,255,0.90);
+  --dark-muted: rgba(255,255,255,0.70);
+  --dark-hover: rgba(255,255,255,0.08);
+  --dark-accent: rgba(165,200,255,0.98);
+}
+
+/* 1) 全站基础背景/文字兜底 */
+html, body{
+  background: var(--dark-bg) !important;
+  color: var(--dark-text) !important;
+}
+
+/* 2) 主容器/页面块：归档/分类/标签/文章/页面/列表页都兜底成暗色卡片 */
+#post, #page, .page, .post, .post-content,
+#recent-posts .recent-post-item,
+#archive, #archive-container, .archive,
+#tag, #tag-container, .tag,
+#category, #category-container, .category,
+#about, #friends, #link, #fcircle,
+#comments, .comments, .comment-wrap,
+.card-widget, #aside-content .card-widget,
+.layout > div:first-child {
+  background: var(--dark-panel) !important;
+  border: 1px solid var(--dark-border) !important;
+  color: var(--dark-text) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* 3) 归档/时间线/列表（你截图里“归档”那种） */
+.archive-list,
+.archive-list .archive-list-item,
+.archive-list .archive-list-item a,
+.timeline,
+.timeline-item,
+#archive .timeline,
+#archive .timeline-item {
+  color: var(--dark-text) !important;
+}
+.timeline::before,
+.timeline-item::before,
+.archive-list::before,
+.archive-list .archive-list-item::before {
+  background: rgba(165,200,255,0.35) !important;
+}
+.timeline-item .time,
+.archive-list .archive-list-date,
+.post-meta,
+.post-meta span,
+time {
+  color: var(--dark-muted) !important;
+}
+
+/* 4) 分割线/虚线/边界线（你截图里列表之间那种线） */
+hr,
+.card-widget hr,
+.recent-post-item hr,
+.archive-list hr,
+#archive hr,
+#post hr,
+#page hr,
+.post-content hr,
+.divider,
+.line,
+.dashed,
+.recent-post-item .content .separator {
+  border-color: var(--dark-border) !important;
+}
+
+/* 5) 链接/hover（列表标题、侧栏链接等） */
+a{ color: var(--dark-accent) !important; }
+a:hover{ color: rgba(255,186,120,0.95) !important; }
+
+/* 6) 分页/按钮/标签胶囊 */
+.pagination,
+.pagination .page-number,
+.pagination a,
+.btn,
+button,
+input[type="button"],
+input[type="submit"]{
+  background: rgba(0,0,0,0.18) !important;
+  color: var(--dark-text) !important;
+  border: 1px solid var(--dark-border) !important;
+}
+.pagination .current,
+.pagination a:hover,
+.btn:hover,
+button:hover{
+  background: rgba(165,200,255,0.16) !important;
+  border-color: rgba(165,200,255,0.42) !important;
+}
+
+/* 7) 输入框/搜索框/表单：避免出现白底 */
+input, textarea, select{
+  background: rgba(0,0,0,0.22) !important;
+  color: var(--dark-text) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+input::placeholder, textarea::placeholder{ color: rgba(255,255,255,0.45) !important; }
+
+/* 8) 表格/引用/代码块：暗色阅读更舒服 */
+table{
+  background: rgba(0,0,0,0.12) !important;
+  color: var(--dark-text) !important;
+}
+th, td{ border-color: rgba(255,255,255,0.10) !important; }
+
+blockquote{
+  background: rgba(0,0,0,0.18) !important;
+  border-left: 4px solid rgba(255,186,120,0.55) !important;
+  color: rgba(255,255,255,0.82) !important;
+}
+
+pre, code, .highlight{
+  background: rgba(0,0,0,0.22) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  color: rgba(255,255,255,0.88) !important;
+}
+
+/* 9) 顶部导航与下拉菜单（兜底，避免其他页面不生效） */
+#nav, #page-header{
+  background: rgba(10, 12, 18, 0.55) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+#nav .menus_item_child,
+.menus_item_child{
+  background: var(--dark-panel-strong) !important;
+  border: 1px solid var(--dark-border) !important;
+}
+#nav .menus_item_child a:hover,
+.menus_item_child a:hover{
+  background: var(--dark-hover) !important;
+  color: rgba(255,186,120,0.95) !important;
+}
+
+/* 10) Footer 全站兜底（防止还有粉色/浅色残留） */
+#footer, #footer-wrap, #footer-bar, .footer, .footer-wrap{
+  background: rgba(10, 14, 26, 0.92) !important;
+  color: rgba(255,255,255,0.80) !important;
+  border-top: 1px solid var(--dark-border) !important;
+}
+#footer::before, #footer::after, #footer-wrap::before, #footer-wrap::after{
+  background: rgba(10, 14, 26, 0.92) !important;
+  opacity: 1 !important;
+}
+
+/* ==== 到这里结束：Butterfly 全站暗色适配兜底包 ==== */
+html[data-theme='dark'] {
+  --bg-base: #0B1220;
+  --bg-2: #111C2E;
+  --leaf-wine: #5B0D13;
+  --warm-copper: #C48A3A;
+  --text-1: rgba(235,240,255,.88);
+  --text-2: rgba(235,240,255,.62);
+  --stroke: rgba(255,255,255,.08);
+  --card-bg: rgba(17,28,46,.58);
+  --card-bg-2: rgba(17,28,46,.42);
+  --card-shadow: 0 14px 40px rgba(0,0,0,.45);
+  --card-glow: 0 0 0 1px rgba(255,255,255,.06), 0 10px 30px rgba(91,13,19,.22);
+}
+
+html[data-theme='dark'] body {
+  background: var(--bg-base) url('/img/bg-autumn-wreck.jpg') center/cover fixed no-repeat !important;
+  color: var(--text-1) !important;
+}
+
+html[data-theme='dark'] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(60% 45% at 50% 35%, rgba(17,28,46,.20) 0%, rgba(11,18,32,.78) 70%),
+    linear-gradient(180deg, rgba(91,13,19,.55) 0%, rgba(11,18,32,.70) 45%, rgba(11,18,32,.78) 100%);
+}
+
+html[data-theme='dark'] #body-wrap,
+html[data-theme='dark'] #content-inner,
+html[data-theme='dark'] #page-header,
+html[data-theme='dark'] #aside-content,
+html[data-theme='dark'] #page,
+html[data-theme='dark'] #post,
+html[data-theme='dark'] main,
+html[data-theme='dark'] header,
+html[data-theme='dark'] footer {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-theme='dark'] .card-widget,
+html[data-theme='dark'] #recent-posts .recent-post-item,
+html[data-theme='dark'] #post,
+html[data-theme='dark'] #page {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--stroke) !important;
+  box-shadow: var(--card-shadow), var(--card-glow) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 18px;
+}
+
+html[data-theme='dark'] .card-widget:hover,
+html[data-theme='dark'] #recent-posts .recent-post-item:hover {
+  background: rgba(17,28,46,.66) !important;
+  border-color: rgba(255,255,255,.12) !important;
+  box-shadow: 0 18px 55px rgba(0,0,0,.55), 0 16px 45px rgba(91,13,19,.28) !important;
+  transform: translateY(-2px);
+  transition: .25s ease;
+}
+
+html[data-theme='dark'] a {
+  color: rgba(196,138,58,.92) !important;
+}
+html[data-theme='dark'] a:hover {
+  color: rgba(255,120,120,.92) !important;
+}
+
+html[data-theme='dark'] #footer {
+  background: rgba(11,18,32,.55) !important;
+  border-top: 1px solid rgba(255,255,255,.06) !important;
+  backdrop-filter: blur(10px);
+}
