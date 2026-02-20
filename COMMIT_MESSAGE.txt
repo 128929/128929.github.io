@@ -14,3 +14,14 @@ feat(nav): 列表下拉菜单暗色风格
 - 本地构建成功 (vite build)
 - 单元测试通过 (3/3)
 - 预览 http://localhost:8000/，悬停“列表”，下拉菜单背景/文字/hover 为暗色
+
+feat(header): 统一各页面顶部背景图 + 导航玻璃态
+
+修改内容:
+- css/custom.css: 末尾追加全局 `#page-header` 背景统一为 `/img/autumn-forest.png`，并为未固定导航添加半透明模糊背景
+- js/custom.js: 首页默认 `butterfly-top.jpg` 兜底替换为统一图 `/img/autumn-forest.png`
+
+验证:
+- 所有页面均加载 `css/custom.css`，新增规则含 `!important` 覆盖各页面内联背景
+- 首页已有 `#page-header.full_page` 指向同一图（css/custom.css:960-964）；其余页面由全局规则统一
+- 预览 http://localhost:8000/，检查首页/归档/分类/关于/友链 页头均显示统一背景

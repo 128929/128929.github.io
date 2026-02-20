@@ -1280,6 +1280,31 @@ html[data-theme='dark'] #page {
   border-radius: 18px;
 }
 
+/* ===== Disable aside sticky/follow (Butterfly) ===== */
+
+/* 1) 直接把所有可能的 sticky/fixed 容器改回普通布局 */
+#aside-content,
+#aside-content .sticky_layout,
+#aside-content .sticky,
+#aside-content .card-widget {
+  position: static !important;
+  top: auto !important;
+  bottom: auto !important;
+}
+
+/* 2) 有些主题用 transform 来做“吸附/悬挂”，一起干掉 */
+#aside-content .sticky_layout,
+#aside-content .sticky {
+  transform: none !important;
+}
+
+/* 3) 极端情况：某些脚本给侧栏加 fixed，兜底 */
+#aside-content [style*="position:fixed"],
+#aside-content [style*="position: fixed"] {
+  position: static !important;
+  top: auto !important;
+}
+
 html[data-theme='dark'] .card-widget:hover,
 html[data-theme='dark'] #recent-posts .recent-post-item:hover {
   background: rgba(17,28,46,.66) !important;
@@ -1301,86 +1326,81 @@ html[data-theme='dark'] #footer {
   border-top: 1px solid rgba(255,255,255,.06) !important;
   backdrop-filter: blur(10px);
 }
-/* ===== Autumn Wreck: Butterfly 5.x 强制生效版 ===== */
+/* ===== Only content area recolor (keep header image) ===== */
 
-/* 1) 全站背景：Butterfly 用 #web_bg 做背景层（别用 body 背景，容易被主题覆盖） */
-#web_bg {
-  background: url("/img/bg-autumn-wreck.jpg") center/cover fixed no-repeat !important;
-}
-
-/* 2) 背景遮罩：贴图氛围（四周更暗，中间雾更亮，带酒红） */
-#web_bg::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(60% 50% at 50% 35%,
-      rgba(17, 28, 46, 0.18) 0%,
-      rgba(11, 18, 32, 0.72) 65%,
-      rgba(11, 18, 32, 0.82) 100%),
-    linear-gradient(180deg,
-      rgba(91, 13, 19, 0.50) 0%,
-      rgba(11, 18, 32, 0.68) 45%,
-      rgba(11, 18, 32, 0.82) 100%);
-}
-
-/* 3) 干掉顶部大图：让 page-header 透明，露出全站背景 */
-#page-header {
-  background: transparent !important;
-}
-#page-header::before {
-  background: transparent !important;
-}
-
-/* 如果你的顶部图是 cover 方式，也一并禁掉（不同配置会命中不同层） */
-#page-header.full_page,
-#page-header.not-home-page {
-  background-image: none !important;
-}
-
-/* 4) 你说的“底下那一大片”：#body-wrap 底色改成冷雾蓝黑 */
+/* 1) 你说的“底下那一大片”：内容区底色（冷雾蓝黑） */
 #body-wrap {
-  background: rgba(11, 18, 32, 0.72) !important;
+  background: rgba(11, 18, 32, 0.92) !important; /* 更深 */
 }
 
-/* 5) 卡片玻璃：文章卡片 + 侧边栏卡片（Butterfly 常用类） */
+/* 2) 主内容容器再给一点层次（避免太死黑） */
+#content-inner {
+  background: transparent !important;
+}
+
+/* 3) 卡片玻璃：文章卡片 + 侧边栏卡片 + 页面卡片 */
 #recent-posts .recent-post-item,
 .card-widget,
 #post,
 #page {
-  background: rgba(17, 28, 46, 0.56) !important;
+  background: rgba(17, 28, 46, 0.58) !important;  /* 冷雾蓝灰 */
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45),
-              0 0 0 1px rgba(255, 255, 255, 0.06),
-              0 10px 30px rgba(91, 13, 19, 0.22) !important;
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 10px 30px rgba(91, 13, 19, 0.18) !important; /* 酒红氛围 */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 18px;
 }
 
-/* 6) hover：轻微提亮 + 酒红氛围 */
+/* 4) hover：轻微提亮 + 酒红氛围更明显一点 */
 #recent-posts .recent-post-item:hover,
 .card-widget:hover {
-  background: rgba(17, 28, 46, 0.66) !important;
+  background: rgba(17, 28, 46, 0.68) !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.55),
-              0 16px 45px rgba(91, 13, 19, 0.30) !important;
+  box-shadow:
+    0 18px 55px rgba(0, 0, 0, 0.55),
+    0 16px 45px rgba(91, 13, 19, 0.28) !important;
   transform: translateY(-2px);
   transition: .25s ease;
 }
 
-/* 7) 链接强调：铜金 -> hover 枫叶红 */
+/* 5) 正文字体颜色微调：更干净的冷白 */
+#post,
+#page,
+#recent-posts {
+  color: rgba(235, 240, 255, 0.88) !important;
+}
+
+/* 6) 次级文字（时间/摘要/小字） */
+.post-meta,
+.post-meta a,
+#recent-posts .content,
+#aside-content,
+#aside-content .card-widget {
+  color: rgba(235, 240, 255, 0.62) !important;
+}
+
+/* 7) 分割线/边框统一变淡 */
+hr,
+#aside-content .item-headline,
+#pagination,
+#pagination * {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 8) 链接强调：铜金 -> hover 枫叶红（可选） */
 a { color: rgba(196, 138, 58, 0.92) !important; }
 a:hover { color: rgba(255, 120, 120, 0.92) !important; }
 
-/* 8) footer 也做一点玻璃收口 */
+/* 9) footer 也顺一下（仍然不动 header） */
 #footer {
-  background: rgba(11, 18, 32, 0.55) !important;
+  background: rgba(11, 18, 32, 0.72) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* 强制开启遮罩层（覆盖早先透明处理） */
-#web_bg::before { opacity: 1 !important; }
+#page-header { background-image: url('/img/autumn-forest.png') !important; background-size: cover !important; background-position: center center !important; }
+#page-header:not(.nav-fixed):not(.not-top-img) #nav { background: rgba(10,14,22,0.35) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }

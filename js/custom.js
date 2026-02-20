@@ -2,13 +2,6 @@
 
 // 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
-  (function ensureWebBg(){
-    if (!document.getElementById('web_bg')) {
-      var bg = document.createElement('div')
-      bg.id = 'web_bg'
-      document.body.insertBefore(bg, document.body.firstChild)
-    }
-  })()
   // 添加页脚心跳效果
   const footer = document.getElementById('footer');
   if (footer) {
@@ -105,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     typeof window.GLOBAL_CONFIG_SITE !== 'undefined' &&
     window.GLOBAL_CONFIG_SITE.pageType === 'home'
   ) {
-    header.style.backgroundImage = "url('/img/placeholder.jpg')";
+    header.style.backgroundImage = "url('/img/autumn-forest.png')";
   }
 
   const html = document.documentElement;
