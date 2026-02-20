@@ -1,0 +1,16 @@
+feat(nav): 列表下拉菜单暗色风格
+
+修改内容:
+- css/custom.css: 追加下拉菜单暗色样式 (774–820)
+  前: 无专门覆盖，导致白底
+  后: 深色背景、白色文字、hover 提亮、边框/阴影统一暗色
+- package.json: 移除 markdown-it-image-size 依赖，避免安装失败
+- src/plugins/markdown.js: 移除 markdown-it-image-size 使用，保持渲染正常
+- vitest.config.ts: 加载 @vitejs/plugin-vue、限定测试范围、设置 jsdom 环境
+- tests/unit/*: 显式引入 vitest 的 test/expect，单元测试通过
+- cypress.config.js + cypress/support/e2e.js: 配置支持文件并忽略跨域脚本异常
+
+验证:
+- 本地构建成功 (vite build)
+- 单元测试通过 (3/3)
+- 预览 http://localhost:8000/，悬停“列表”，下拉菜单背景/文字/hover 为暗色

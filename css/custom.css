@@ -246,13 +246,12 @@ body {
   color: #ffffff !important;
 }
 
-/* 链接颜色调整 */
-a {
-  color: #a3d9ff !important;
+#article-container a {
+  color: #a3d9ff;
 }
 
-a:hover {
-  color: #ff6b6b !important;
+#article-container a:hover {
+  color: #ff6b6b;
 }
 
 /* 页脚心跳动画 */
@@ -273,6 +272,13 @@ a:hover {
   transform: rotate(360deg);
   transition: all 1s;
 }
+.card-info-social-icons .social-icon { display:inline-block; width:28px; height:28px; background-size:contain; background-repeat:no-repeat; background-position:center; margin:0 6px; }
+.card-info-social-icons .social-icon i { display:none; }
+.card-info-social-icons .social-icon[title="Github"] { background-image:url('/custom/images/github.svg'); }
+.card-info-social-icons .social-icon[title="Email"] { background-image:url('/custom/images/email.svg'); }
+.card-info-social-icons .social-icon[title="微博"] { background-image:url('/custom/images/weibo.svg'); }
+.card-info-social-icons .social-icon[title="Twitter"] { background-image:url('/custom/images/twitter.svg'); }
+.card-info-social-icons .social-icon[title="CodePen"] { background-image:url('/custom/images/codepen.svg'); }
 
 /* 文章标题下划线 */
 .article-sort-title:before,
@@ -291,6 +297,11 @@ a:hover {
   background: url('/img/loading.gif') no-repeat center center;
   background-size: cover;
 }
+.layout > div:first-child { width: 68% !important; }
+@media screen and (min-width: 900px) {
+  .layout > #aside-content.aside-content { width: 360px !important; max-width: 360px; -webkit-flex: 0 0 360px; -ms-flex: 0 0 360px; flex: 0 0 360px; }
+  .layout > div:first-child { width: calc(100% - 360px) !important; }
+}
 .post-layout { max-width: 1000px; margin: 0 auto; padding: 20px; }
 .post-layout .post-header { margin-bottom: 12px; }
 .post-layout .post-body { display: grid; grid-template-columns: 1fr 280px; gap: 24px; align-items: start; }
@@ -304,3 +315,568 @@ a:hover {
 .toc-container .toc-list li { margin: 6px 0; }
 .toc-container .toc-list a { color: #2563eb; text-decoration: none; }
 .toc-container .toc-list a:hover { text-decoration: underline; }
+
+#page-header:not(.nav-fixed):not(.not-top-img) #nav a,
+#page-header:not(.nav-fixed):not(.not-top-img) #nav span.site-page,
+#page-header:not(.nav-fixed):not(.not-top-img) #nav .site-name { color: var(--light-grey) !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.15); }
+#page-header:not(.nav-fixed):not(.not-top-img) #nav a:hover,
+#page-header:not(.nav-fixed):not(.not-top-img) #nav span.site-page:hover { color: var(--white) !important; }
+
+#page-header:not(.nav-fixed):not(.not-top-img) #nav { background: transparent !important; box-shadow: none !important; -webkit-box-shadow: none !important; }
+
+/* --- 文章页左右互换（只在文章页生效） --- */
+.layout:has(#article-container) > #aside-content {
+  order: 2;
+  flex: 0 0 360px;
+  max-width: 360px;
+  width: 360px !important;
+}
+
+.layout:has(#article-container) > .post.post-layout,
+.layout:has(#article-container) > #main {
+  order: 1;
+  flex: 1 1 calc(100% - 360px);
+  min-width: 0;
+  width: calc(100% - 360px) !important;
+}
+
+.layout:has(#article-container) > div:first-child {
+  width: auto !important;
+}
+
+.layout:has(#article-container) { gap: 24px; }
+
+@media screen and (max-width: 900px) {
+  .layout:has(#article-container) > #aside-content,
+  .layout:has(#article-container) > .post.post-layout,
+  .layout:has(#article-container) > #main {
+    order: initial;
+    flex: none;
+    max-width: none;
+    width: auto !important;
+  }
+  .layout:has(#article-container) { gap: 0; }
+}
+
+/* 备用容器：当布局容器不是 .layout 时 */
+#content-inner:has(#article-container) > #aside-content,
+#content-outer:has(#article-container) > #aside-content,
+#page:has(#article-container) > #aside-content,
+#body-wrap:has(#article-container) .aside-content#aside-content {
+  order: 2;
+  flex: 0 0 360px;
+  max-width: 360px;
+  width: 360px !important;
+}
+
+#content-inner:has(#article-container) > .post.post-layout,
+#content-outer:has(#article-container) > .post.post-layout,
+#page:has(#article-container) > .post.post-layout,
+#body-wrap:has(#article-container) .post.post-layout {
+  order: 1;
+  flex: 1 1 calc(100% - 360px);
+  min-width: 0;
+  width: calc(100% - 360px) !important;
+}
+
+/* Fallback：不支持 :has 的浏览器，基于 .post.post-layout 特征 */
+.page #content-inner > .post.post-layout {
+  order: 1;
+  flex: 1 1 calc(100% - 360px);
+  min-width: 0;
+  width: calc(100% - 360px) !important;
+}
+.page #content-inner > #aside-content {
+  order: 2;
+  flex: 0 0 360px;
+  max-width: 360px;
+  width: 360px !important;
+}
+@media screen and (max-width: 900px) {
+  .page #content-inner > .post.post-layout,
+  .page #content-inner > #aside-content {
+    order: initial;
+    flex: none;
+    max-width: none;
+    width: auto !important;
+  }
+}
+
+#recent-posts .recent-post-item > .recent-post-info > .article-title { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; -webkit-line-clamp: 1; }
+#recent-posts .recent-post-item > .recent-post-info > .content { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; -webkit-line-clamp: 3; }
+.article-sort-item-title { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; -webkit-line-clamp: 2; }
+#post-info .post-title { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; -webkit-line-clamp: 2; }
+.site-data > a .headline { font-weight: 600; letter-spacing: .02em; }
+.avatar-img { transition: transform .6s ease; }
+.avatar-img:hover { transform: scale(1.06); }
+.layout > div:first-child:not(.nc) { transition: box-shadow .3s ease, transform .3s ease; }
+.layout > div:first-child:not(.nc):hover { box-shadow: var(--card-hover-box-shadow); transform: translateZ(0); }
+#aside-content #card-toc .toc-content .toc a {
+  color: #3370ff;
+  text-decoration: none;
+}
+#aside-content #card-toc .toc-content .toc a:hover {
+  color: #2c63e6;
+}
+#aside-content #card-toc .toc-content .toc .toc-link.active {
+  font-weight: 700;
+}
+#aside-content #card-toc {
+  position: sticky;
+  top: 96px;
+  z-index: 2;
+  max-height: calc(100vh - 140px);
+  overflow: auto;
+}
+/* 目录内容更紧凑 */
+#aside-content #card-toc .toc-content {
+  font-size: 0.92em;
+  line-height: 1.45;
+}
+#aside-content #card-toc .toc-content .toc li { margin: 6px 0; }
+#aside-content .card-recent-post {
+  position: sticky;
+  top: 120px;
+  z-index: 1;
+}
+/* 仅当文章页存在时，对 aside 启用 sticky */
+.layout .post ~ #aside-content #card-toc { position: sticky; top: 96px; z-index: 2; max-height: calc(100vh - 140px); overflow: auto; }
+.layout .post ~ #aside-content .card-recent-post { position: sticky; top: 120px; z-index: 1; }
+@media (min-width: 901px) {
+  .layout { display: flex; }
+  .layout > .post { order: 2; }
+  .layout > #aside-content { order: 1; }
+}
+@media (max-width: 900px) {
+  #aside-content { display: none; }
+}
+
+/* 文章页：右侧侧栏整体 sticky，并允许独立滚动与阻断滚动链 */
+@media (min-width: 901px) {
+  .layout:has(#article-container) > #aside-content {
+    position: sticky;
+    top: 96px;
+    height: calc(100vh - 120px);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+}
+/* Fallback：不支持 :has 的浏览器，仅在文章页结构下启用 sticky */
+@media (min-width: 901px) {
+  .page #content-inner > .post.post-layout ~ #aside-content {
+    position: sticky;
+    top: 96px;
+    height: calc(100vh - 120px);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+#read-progress {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(0,0,0,0.08);
+  z-index: 9999;
+}
+#read-progress .bar {
+  width: 0%;
+  height: 100%;
+  background: #3370ff;
+  transition: width .1s linear;
+}
+#read-progress .pct {
+  position: fixed;
+  right: 12px;
+  top: 6px;
+  font-size: 12px;
+  color: #646a73;
+  z-index: 10000;
+}
+/* ------------------------------
+   文章页左右互换（正文左、侧栏右）
+   仅在文章页生效：当容器中存在 article.post 时应用
+   不修改 DOM，仅通过 flex + order 控制
+   移动端恢复默认堆叠
+-------------------------------- */
+@media (min-width: 901px) {
+  /* 保证父容器启用 flex（Butterfly 常见：#content-inner 或 .layout） */
+  #content-inner.layout { display: flex; }
+  #content-outer.layout { display: flex; }
+
+  /* 主体正文置左：更高选择器并使用 !important，覆盖旧的自定义顺序 */
+  #content-inner.layout > article.post { order: 1 !important; }
+  #content-outer.layout > article.post { order: 1 !important; }
+  .layout > article.post { order: 1 !important; }
+
+  /* 侧栏置右：仅在同级存在 article.post 时应用（使用 ~ 同级选择器保证仅文章页触发） */
+  #content-inner.layout > article.post ~ #aside-content { order: 2 !important; }
+  #content-outer.layout > article.post ~ #aside-content { order: 2 !important; }
+  .layout > article.post ~ #aside-content { order: 2 !important; }
+}
+
+/* 移动端（<900px）：恢复默认堆叠，不强制左右两栏 */
+@media (max-width: 900px) {
+  #content-inner.layout > article.post,
+  #content-inner.layout > article.post ~ #aside-content,
+  #content-outer.layout > article.post,
+  #content-outer.layout > article.post ~ #aside-content,
+  .layout > article.post,
+  .layout > article.post ~ #aside-content { order: initial !important; }
+}
+/* ==== 从这里开始：文章页右侧仅“目录 + 紧随其后的第一张卡片”跟随（sticky）且各自可滚动 ==== */ 
+/* 说明： 
+   - 仅文章页生效：通过 js/custom.js 在文章页给 #aside-content 添加 sticky-scope 类 
+   - 不使用 :has()，避免兼容问题 
+   - 只让 #card-toc 与 #card-toc + .card-widget 两块 sticky，其他卡片不跟随 
+   - 两块各自 overflow: auto，鼠标滚轮只滚它们自身 
+   - 移动端自动恢复 position: static; overflow: visible 
+ */ 
+
+/* 桌面端：两块 sticky + 独立滚动容器，不改变侧栏宽度与其他卡片 */ 
+@media (min-width: 901px) { 
+  /* 基础 top 偏移由 JS 写入 CSS 变量 --aside-sticky-top（默认 96px） */ 
+  #aside-content.sticky-scope { --aside-sticky-top: 96px; } 
+
+  /* 目录卡片固定在上方 */ 
+  #aside-content.sticky-scope #card-toc { 
+    position: sticky; 
+    top: var(--aside-sticky-top); 
+    z-index: 10; 
+  } 
+  /* 目录内容稍微紧凑且限高，独立滚动 */ 
+  #aside-content.sticky-scope #card-toc .toc-content { 
+    max-height: calc(100vh - (var(--aside-sticky-top) + 160px)); 
+    overflow: auto; 
+    font-size: 0.92em; 
+    line-height: 1.45; 
+  } 
+  #aside-content.sticky-scope #card-toc .toc-content .toc li { margin: 6px 0; } 
+
+  /* 目录下第一张卡片固定在目录下方，避免重叠（top = aside-top + 目录卡片高度） */ 
+  #aside-content.sticky-scope #card-toc + .card-widget { 
+    position: sticky; 
+    top: calc(var(--aside-sticky-top) + var(--toc-height, 120px)); 
+    z-index: 9; 
+    max-height: calc(100vh - (var(--aside-sticky-top) + var(--toc-height, 120px))); 
+    overflow: auto; 
+    overscroll-behavior: contain; /* 鼠标滚轮只滚这块，不影响正文 */ 
+  } 
+} 
+
+/* 移动端：取消 sticky/滚动容器，保持原本堆叠 */ 
+@media (max-width: 900px) { 
+  #aside-content.sticky-scope #card-toc, 
+  #aside-content.sticky-scope #card-toc + .card-widget { 
+    position: static; 
+    top: auto; 
+    max-height: none; 
+    overflow: visible; 
+  } 
+} 
+/* ==== 到这里结束：文章页右侧仅“目录 + 第一张卡片”跟随 ==== */ 
+/* ==== 从这里开始：白色背景 + 粒子连线动画（canvas） ==== */
+/* 说明：
+   - JS 会注入 <canvas id="particle-canvas"> 到 body 最前面
+   - canvas fixed 全屏，z-index 最底层，不挡点击（pointer-events:none）
+   - 强制背景白色，覆盖主题原有背景图/渐变
+*/
+
+/* 全站白色底（覆盖主题背景图/渐变） */
+html, body {
+  background: #fff !important;
+}
+
+/* 如果主题用 body::before / #web_bg 等做背景，这里强制关掉 */
+#web_bg,
+#web_bg::before,
+body::before,
+body::after {
+  background: transparent !important;
+  background-image: none !important;
+  opacity: 0 !important;
+}
+
+/* 粒子画布：固定全屏，永远在内容后面 */
+#particle-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 确保页面内容层级在 canvas 之上（避免被覆盖） */
+#body-wrap,
+#page,
+#content-inner,
+#aside-content,
+main,
+header,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* 减少动画偏好：只保留白底，不显示 canvas */
+@media (prefers-reduced-motion: reduce) {
+  #particle-canvas { display: none !important; }
+}
+/* ==== 到这里结束：白色背景 + 粒子连线动画（canvas） ==== */
+/* ==== 从这里开始：暗色整体风格 + 可交互粒子连线背景（canvas） ==== */
+/* 说明：
+   - JS 会注入 <canvas id="particle-canvas"> 到 body 最前面
+   - canvas fixed 全屏，z-index 最底层，不挡点击（pointer-events:none）
+   - 覆盖主题背景为暗色；卡片更暗更通透；文字更亮
+*/
+
+/* 全局暗色背景（覆盖主题背景图/渐变） */
+html, body {
+  background: #0b1020 !important;
+  color: rgba(255,255,255,0.86);
+}
+
+/* 如果主题用 body::before / #web_bg 等做背景，这里强制关掉 */
+#web_bg,
+#web_bg::before,
+body::before,
+body::after {
+  background: transparent !important;
+  background-image: none !important;
+  opacity: 0 !important;
+}
+
+/* 粒子画布：固定全屏，永远在内容后面 */
+#particle-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 确保页面内容层级在 canvas 之上 */
+#body-wrap,
+#page,
+#content-inner,
+#aside-content,
+main,
+header,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* 让主要卡片变成暗色半透明（不破坏布局，只调颜色） */
+.card-widget,
+#post,
+#page,
+#recent-posts .recent-post-item,
+.layout > div:first-child,
+#aside-content .card-widget {
+  background: rgba(20, 26, 48, 0.78) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25) !important;
+}
+
+/* 标题/链接更亮，hover 更明显 */
+a, .site-title, .post-title, .card-widget .item-headline {
+  color: rgba(255,255,255,0.88) !important;
+}
+a:hover { color: rgba(140, 180, 255, 0.95) !important; }
+
+/* 顶部导航稍微暗一点 */
+#nav, #page-header {
+  background: rgba(10, 14, 28, 0.72) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* 减少动态偏好：只保留暗色，不显示 canvas */
+@media (prefers-reduced-motion: reduce) {
+  #particle-canvas { display: none !important; }
+}
+/* ==== 到这里结束：暗色整体风格 + 可交互粒子连线背景 ==== */
+/* ==== 从这里开始：取消“目录后第一张卡片（如 最新文章）”的 sticky 跟随 ==== */
+/* Modified per e:\Study(myself)\自己做的\博客\修改的建议.txt suggestion #1 */
+/* 仅在文章页 sticky-scope 作用域内生效 */
+@media (min-width: 901px) {
+  /* 覆盖之前的规则：让 #card-toc 后面的第一张卡片恢复普通布局 */
+  #aside-content.sticky-scope #card-toc + .card-widget {
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    overscroll-behavior: auto !important;
+  }
+}
+/* ==== 到这里结束：取消“目录后第一张卡片”sticky ==== */
+
+/* ==== 从这里开始：暗色整体提亮（覆盖上一版暗色参数） ==== */
+/* Modified per e:\Study(myself)\自己做的\博客\修改的建议.txt suggestion #2 */
+/* 说明：只做颜色提亮，不改布局、不改 JS、不影响粒子 canvas */
+
+/* 背景整体提亮 */
+html, body {
+  background: #131b33 !important; /* 原来更深：#0b1020 */
+  color: rgba(255, 255, 255, 0.90) !important;
+}
+
+/* 卡片更亮一点、更通透一点 */
+.card-widget,
+#post,
+#page,
+#recent-posts .recent-post-item,
+.layout > div:first-child,
+#aside-content .card-widget {
+  background: rgba(28, 38, 68, 0.78) !important; /* 提亮 */
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
+}
+
+/* 次要文字提亮（日期/描述等） */
+#aside-content,
+#post,
+#page,
+#recent-posts,
+.post-meta,
+.post-meta span,
+time,
+.card-widget .item-content,
+.card-widget .recent-post-info,
+.card-widget .recent-post-info time {
+  color: rgba(255,255,255,0.72) !important;
+}
+
+/* 分割线/边框更柔和 */
+hr,
+.card-widget hr,
+#aside-content .card-widget hr {
+  border-color: rgba(255,255,255,0.10) !important;
+}
+
+/* 顶部导航也提亮一点 */
+#nav, #page-header {
+  background: rgba(18, 24, 44, 0.72) !important;
+}
+
+/* 链接颜色稍亮一点 */
+a, .site-title, .post-title, .card-widget .item-headline {
+  color: rgba(255,255,255,0.92) !important;
+}
+a:hover { color: rgba(165, 200, 255, 0.98) !important; }
+/* ==== 到这里结束：暗色整体提亮 ==== */
+/* ==== 从这里开始：修复导航“列表”等下拉菜单颜色（暗色风格） ==== */
+
+/* 下拉容器（Butterfly 常用选择器：menus_item_child） */
+#nav .menus_item_child,
+#nav .menus_item_child li,
+#nav .menus_item_child a,
+#nav .menus_item_child::before,
+#nav .menus_item_child::after,
+.menus_item_child,
+.menus_item_child li,
+.menus_item_child a {
+  color: rgba(255,255,255,0.88) !important;
+}
+
+/* 下拉面板背景/边框/阴影 */
+#nav .menus_item_child,
+.menus_item_child {
+  background: rgba(18, 24, 44, 0.92) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.35) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* 下拉项 hover */
+#nav .menus_item_child a:hover,
+.menus_item_child a:hover {
+  background: rgba(255,255,255,0.08) !important;
+  color: rgba(165,200,255,0.98) !important;
+}
+
+/* 如果主题给下拉项加了分割线/边框，统一变暗 */
+#nav .menus_item_child li,
+.menus_item_child li {
+  border-color: rgba(255,255,255,0.10) !important;
+}
+
+/* 有些主题用 ul::before 做小三角，也一起变暗 */
+#nav .menus_item_child:before,
+  #nav .menus_item_child:after,
+  .menus_item_child:before,
+  .menus_item_child:after {
+    border-bottom-color: rgba(18, 24, 44, 0.92) !important;
+    border-top-color: rgba(18, 24, 44, 0.92) !important;
+  }
+
+  /* ==== 到这里结束：修复导航下拉菜单颜色 ==== */
+/* ==== 从这里开始：右侧侧边栏全部取消跟随（禁用 sticky/fixed） ==== */
+@media (min-width: 901px) {
+  #aside-content.sticky-scope #card-toc,
+  #aside-content.sticky-scope #card-toc + .card-widget,
+  #aside-content.sticky-scope .card-widget {
+    position: static !important;
+    top: auto !important;
+  bottom: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  overscroll-behavior: auto !important;
+  }
+}
+/* ==== 到这里结束：右侧侧边栏全部取消跟随 ==== */
+/* ==== 从这里开始：分类页底部白色区域改暗色（兜底覆盖） ==== */
+
+/* 分类页：常见白底容器兜底变暗（兼容 Butterfly 不同结构） */
+body.page-categories #post,
+body.page-categories #page,
+body.page-categories .page,
+body.page-categories .category-lists,
+body.page-categories .category-lists .category-list,
+body.page-categories .category-lists .category-list-item,
+body.page-categories .category-lists .category-list-count,
+body.page-categories .category-lists .category-list-link,
+body.page-categories #comments,
+body.page-categories .comments,
+body.page-categories .comment-wrap,
+body.page-categories .tk-comments,
+body.page-categories .artalk,
+body.page-categories .artalk * {
+  background: rgba(28, 38, 68, 0.78) !important;
+  color: rgba(255,255,255,0.86) !important;
+}
+
+/* 分类页：把白色输入框/面板也压暗一点（如果有） */
+body.page-categories input,
+body.page-categories textarea,
+body.page-categories select {
+  background: rgba(0,0,0,0.22) !important;
+  color: rgba(255,255,255,0.90) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+/* 分类页：卡片统一边框与阴影 */
+body.page-categories #post,
+body.page-categories #page,
+body.page-categories #comments,
+body.page-categories .comments,
+body.page-categories .comment-wrap,
+body.page-categories .tk-comments,
+body.page-categories .artalk {
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
+  border-radius: 14px !important;
+}
+
+/* ==== 到这里结束：分类页底部白色区域改暗色 ==== */
+
+/* ==== 从这里开始：隐藏旧粒子 canvas（如果存在） ==== */
+#particle-canvas { display: none !important; }
+/* ==== 到这里结束：隐藏旧粒子 canvas ==== */
