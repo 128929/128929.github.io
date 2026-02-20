@@ -86,6 +86,20 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   });
+
+  const missingCovers = document.querySelectorAll('img[data-lazy-src="/img/butterfly-cover.jpg"]');
+  missingCovers.forEach(img => {
+    img.setAttribute('data-lazy-src', '/img/placeholder.jpg');
+  });
+
+  const header = document.getElementById('page-header');
+  if (header && /butterfly-top\.jpg/.test(header.style.backgroundImage)) {
+    header.style.backgroundImage = "url('/img/placeholder.jpg')";
+  }
+
+  const html = document.documentElement;
+  html.classList.remove('hide-aside');
+  try { localStorage.removeItem('aside-status'); } catch (e) {}
 });
 
 // 添加网站运行时间统计
