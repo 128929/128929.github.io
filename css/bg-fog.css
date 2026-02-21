@@ -1,0 +1,18 @@
+#bg-fog {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--fog-opacity, 0.16);
+  mix-blend-mode: screen;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+}
+
+@media (prefers-contrast: more) {
+  #bg-fog {
+    mix-blend-mode: normal;
+  }
+}
+

@@ -1404,6 +1404,50 @@ a:hover { color: rgba(255, 120, 120, 0.92) !important; }
 
 #page-header { background-image: url('/img/autumn-forest.png') !important; background-size: cover !important; background-position: center center !important; }
 #page-header:not(.nav-fixed):not(.not-top-img) #nav { background: rgba(10,14,22,0.35) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+[data-aos], .aos-init, .aos-animate, .wow, .animated {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+#post, #page, .card-widget, #recent-posts .recent-post-item {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  #post, #page, .card-widget, #recent-posts .recent-post-item {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+img.lazyload, img[data-src], img[data-lazy-src] {
+  filter: none !important;
+  transition: none !important;
+}
+
+#bg-fog {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#body-wrap,
+#page,
+#content-inner,
+#aside-content,
+main,
+header,
+footer {
+  position: relative;
+  z-index: 1;
+}
+#body-wrap, #content-inner, #page, #post, main, header, footer, aside, nav, button, input, textarea, select {
+  font-family: "Noto Sans SC","PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+}
 /* ===== Article area: force dark ===== */
 
 /* 1) 正文主容器：把白底打掉 */
