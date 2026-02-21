@@ -857,6 +857,28 @@ document.addEventListener('DOMContentLoaded', () => {
   refreshFn()
   unRefreshFn()
 
+  btf.getCSS('/css/bg-fog.css').catch(() => {})
+  btf.getScript('/js/bg-fog.js').then(() => {
+    if (window.bgFog && typeof window.bgFog.init === 'function') window.bgFog.init()
+  }).catch(() => {})
+
+  try {
+    var linkIcon = document.querySelector('link[rel="shortcut icon"], link[rel="icon"]')
+    if (linkIcon) linkIcon.setAttribute('href', '/img/favicon.ico')
+    var appleIcon = document.querySelector('link[rel="apple-touch-icon"]')
+    if (appleIcon) appleIcon.setAttribute('href', '/img/butterfly-icon.png')
+    var avatarLazy = document.querySelector('#sidebar-menus .avatar-img img')
+    if (avatarLazy) {
+      avatarLazy.setAttribute('data-lazy-src', '/img/butterfly-icon.png')
+      avatarLazy.setAttribute('src', '/img/loading.gif')
+    }
+  } catch (e) {}
+
+  btf.getCSS('/css/bg-effects.css').catch(() => {})
+  btf.getScript('/js/bg-leaves.js').then(() => {
+    if (window.bgLeaves && typeof window.bgLeaves.init === 'function') window.bgLeaves.init()
+  }).catch(() => {})
+
   // 處理 hexo-blog-encrypt 事件
   window.addEventListener('hexo-blog-decrypt', e => {
     forPostFn()

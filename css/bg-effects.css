@@ -1,0 +1,25 @@
+/* Fog & Leaves canvas layering */
+#bg-fog,
+#bg-leaves {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#bg-leaves { opacity: var(--leaves-opacity, 0.18); }
+
+@media (prefers-reduced-motion: reduce) {
+  #bg-fog, #bg-leaves { display: none !important; }
+}
+
+/* Ensure content above background canvases */
+#body-wrap,
+#page,
+#content-inner,
+#aside-content,
+main,
+header,
+footer { position: relative; z-index: 1; }
