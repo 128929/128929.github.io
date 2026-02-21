@@ -112,3 +112,33 @@
 - 删除或注释 `css/custom.css` 末尾两条新增规则，即可恢复各页面原有顶部背景；
 - 或将 `js/custom.js` 中对首页背景的替换行改回 `/img/placeholder.jpg`；
 - 若改回主题配置生成静态页，按主题配置项 `index_img/default_top_img/archive_img/tag_img/category_img` 恢复。
+
+---
+
+日期：2026-02-21（第五次更新）
+
+对应建议编号：#1（图标/头像稳定）、#3（Fog 漂浮）、#4（落叶飘落）
+
+改动摘要：
+
+- 修复左上角图标/头像：将站点 favicon 统一为 `/img/favicon.ico`，并在运行时兜底修正 `<link rel="shortcut icon">`；侧边头像统一使用 `/img/butterfly-icon.png`（支持懒加载占位 `/img/loading.gif`）。
+- 背景雾气（Fog Drift）：保留既有 `js/bg-fog.js` 并增强 DEBUG 日志；确保 `pointer-events:none`、`z-index:0`、DPR 适配、轻微视差、PJAX 重建与销毁。
+- 新增落叶飘落（鼠标互动）：新增 `js/bg-leaves.js` 与 `css/bg-effects.css`，实现暗红/酒红/铜金叶片下落与旋转、鼠标半径排斥、移动端默认关闭，尊重 `prefers-reduced-motion`，PJAX 切页销毁与重建。
+- 注入方式：在 `js/main.js` 动态加载 `bg-effects.css`、`bg-fog.js`、`bg-leaves.js`，全站生效且避免重复创建。
+
+文件与路径：
+
+- 修改：`index.html`（favicon 从 `/img/favicon.png` 修正为 `/img/favicon.ico`）
+- 修改：`js/main.js`（动态注入 CSS/JS，兜底修复 favicon 与头像路径；加载并初始化 fog/leaves）
+- 修改：`js/bg-fog.js`（按 DEBUG 开关输出 `[fog] mounted`）
+- 新增：`css/bg-effects.css`（fog/leaves canvas 层样式）
+- 新增：`js/bg-leaves.js`（落叶特效实现）
+
+验证要点：
+
+- 打开首页/文章页/分类页，看到雾气与落叶；在移动端或 `prefers-reduced-motion` 下不显示；控制台仅在 `DEBUG=true` 时输出 `[fog] mounted` 与 `[leaves] mounted`。
+- 鼠标在内容区域正常可点击；canvas 均为 `pointer-events:none` 且不遮挡；切页不叠加多个实例（PJAX 销毁/重建）。
+
+回滚方案：
+
+- 删除 `css/bg-effects.css` 与 `js/bg-leaves.js`；在 `js/main.js` 移除相应 `getCSS/getScript` 与初始化逻辑；`js/bg-fog.js` 的日志行可一并移除。
