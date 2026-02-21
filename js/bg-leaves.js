@@ -26,9 +26,9 @@
   const clamp = (v, lim) => v > lim ? lim : (v < -lim ? -lim : v)
 
   const COLORS = [
-    'rgba(180, 40, 48, 0.35)',   // 暗红
-    'rgba(140, 22, 30, 0.35)',   // 酒红
-    'rgba(196, 138, 58, 0.35)'   // 铜金
+    'rgba(180, 40, 48, 0.35)',
+    'rgba(140, 22, 30, 0.35)',
+    'rgba(196, 138, 58, 0.35)'
   ]
 
   const leaves = []

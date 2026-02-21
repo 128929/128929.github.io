@@ -1,4 +1,3 @@
-/* Fog & Leaves canvas layering */
 #bg-fog,
 #bg-leaves {
   position: fixed;
@@ -15,7 +14,6 @@
   #bg-fog, #bg-leaves { display: none !important; }
 }
 
-/* Ensure content above background canvases */
 #body-wrap,
 #page,
 #content-inner,
