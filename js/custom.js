@@ -895,3 +895,5 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 /* ==== 到这里结束：强制导航“搜索”跳转 /search/ ==== */
+// 全站加载右侧栏强制展开脚本（DOM 就绪 + PJAX 完成时兜底）
+try { if (window.btf && typeof btf.getScript === 'function') btf.getScript('/js/aside-expand.js'); } catch (e) {}

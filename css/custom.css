@@ -1404,3 +1404,104 @@ a:hover { color: rgba(255, 120, 120, 0.92) !important; }
 
 #page-header { background-image: url('/img/autumn-forest.png') !important; background-size: cover !important; background-position: center center !important; }
 #page-header:not(.nav-fixed):not(.not-top-img) #nav { background: rgba(10,14,22,0.35) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+/* ===== Article area: force dark ===== */
+
+/* 1) 正文主容器：把白底打掉 */
+#post, #page,
+#post .post-content,
+#article-container,
+#post-content,
+.article-content {
+  background: rgba(17, 28, 46, 0.62) !important;
+  color: rgba(235, 240, 255, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 18px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.45),
+              0 0 0 1px rgba(255,255,255,.06),
+              0 10px 30px rgba(91,13,19,.18) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* 2) 段落/列表/小字 */
+#article-container p,
+#article-container li,
+#article-container span,
+#article-container small {
+  color: rgba(235, 240, 255, 0.82) !important;
+}
+.post-meta, .post-meta a, .post-copyright {
+  color: rgba(235, 240, 255, 0.62) !important;
+}
+
+/* 3) 链接 */
+#article-container a {
+  color: rgba(196, 138, 58, 0.92) !important;
+}
+#article-container a:hover {
+  color: rgba(255, 120, 120, 0.92) !important;
+}
+
+/* 4) 引用块/提示块 */
+#article-container blockquote {
+  background: rgba(11, 18, 32, 0.70) !important;
+  border-left: 4px solid rgba(255, 120, 120, 0.45) !important;
+  color: rgba(235, 240, 255, 0.82) !important;
+}
+
+/* 5) 表格 */
+#article-container table {
+  background: rgba(11, 18, 32, 0.55) !important;
+}
+#article-container th,
+#article-container td {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(235, 240, 255, 0.82) !important;
+}
+
+/* 6) 代码块（highlight/prism） */
+figure.highlight,
+pre[class*="language-"],
+#article-container pre {
+  background: rgba(11, 18, 32, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(235, 240, 255, 0.88) !important;
+}
+#article-container :not(pre) > code {
+  background: rgba(11, 18, 32, 0.60) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(235, 240, 255, 0.88) !important;
+  padding: .15em .35em;
+  border-radius: 6px;
+}
+
+/* 7) 分割线 */
+#article-container hr {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ===== Aside: force expand all ===== */
+
+/* 尽可能强制内容区展开（按实际 DOM 命中） */
+#aside-content .is-collapsed,
+#aside-content .collapsed,
+#aside-content .hide,
+#aside-content .hidden,
+#aside-content .toggle-content {
+  display: block !important;
+  height: auto !important;
+  max-height: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  overflow: visible !important;
+}
+
+/* 隐藏折叠按钮/箭头（按实际 DOM 命中） */
+#aside-content .toggle-btn,
+#aside-content .btn-toggle,
+#aside-content .expand,
+#aside-content .collapse,
+#aside-content .fa-angle-down,
+#aside-content .fa-chevron-down {
+  display: none !important;
+}
