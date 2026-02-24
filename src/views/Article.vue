@@ -55,12 +55,26 @@ const calcProgress = () => {
   progress.value = isNaN(p) ? 0 : p
 }
 
+let ticking = false
+const onScroll = () => {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      calcProgress()
+      ticking = false
+    })
+    ticking = true
+  }
+}
+
 onMounted(async () => {
   html.value = await md.render(source.value)
+  // Wait for DOM update
+  await new Promise(r => setTimeout(r, 0))
+  
   const hs = Array.from(document.querySelectorAll('#article-container h1, #article-container h2, #article-container h3, #article-container h4, #article-container h5, #article-container h6'))
   tocItems.value = hs.map(h => ({ id: h.id, text: h.textContent, level: Number(h.tagName[1]) }))
   calcProgress()
-  window.addEventListener('scroll', calcProgress, { passive: true })
+  window.addEventListener('scroll', onScroll, { passive: true })
 })
 </script>
 

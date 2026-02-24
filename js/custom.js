@@ -382,182 +382,74 @@ document.addEventListener('DOMContentLoaded', function () {
   } 
 }) 
 /* ==== 到这里结束：文章页右侧仅“目录 + 第一张卡片”sticky 的偏移计算与滚动增强 ==== */ 
-/* ==== 从这里开始：白底粒子连线动画（canvas 粒子网络） ==== */
+/* ==== 从这里开始：动态粒子背景（数量对应文章总数） ==== */
 ;(function () {
-  // 尊重系统“减少动态效果”
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-  // 避免重复注入
-  if (document.getElementById('particle-canvas')) return
+  // 防止重复初始化
+  if (document.getElementById('particle-canvas-dynamic')) return
 
-  // 创建 canvas 并插到 body 最前面，确保在最底层
   var canvas = document.createElement('canvas')
-  canvas.id = 'particle-canvas'
+  canvas.id = 'particle-canvas-dynamic'
+  // 样式：固定在底层，不阻挡点击
+  canvas.style.cssText = [
+    'position:fixed', 'inset:0', 'width:100vw', 'height:100vh',
+    'z-index:0', 'pointer-events:none'
+  ].join(';')
   document.body.insertBefore(canvas, document.body.firstChild)
 
   var ctx = canvas.getContext('2d', { alpha: true })
   var dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1))
+  var w = 0, h = 0, raf = 0
+  var ps = []
+  var mouse = { x: -9999, y: -9999, active: false }
 
-  // 粒子配置（桌面/移动端自动调整）
-  function getConfig() {
-    var isMobile = window.innerWidth <= 900
-    return {
-      count: isMobile ? 45 : 90,
-      speed: isMobile ? 0.35 : 0.55,
-      radius: isMobile ? 1.2 : 1.6,
-      linkDist: isMobile ? 110 : 150,
-      // 线条与点的颜色：浅灰（白底上柔和）
-      dot: 'rgba(120,120,120,0.55)',
-      line: 'rgba(120,120,120,0.20)'
+  // 获取文章数量
+  function getPostCount() {
+    // 尝试从侧边栏获取
+    var el = document.querySelector('.site-data .length-num') || 
+             document.querySelector('.site-data a[href*="archives"] .length-num')
+    if (el) {
+      var num = parseInt(el.innerText.trim(), 10)
+      if (!isNaN(num) && num > 0) return num
     }
+    // 默认回退值（如果没找到 DOM）
+    return 50 
   }
-
-  var cfg = getConfig()
-  var w = 0, h = 0
-  var particles = []
-  var rafId = 0
-
-  function resize() {
-    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1))
-    w = Math.floor(window.innerWidth)
-    h = Math.floor(window.innerHeight)
-    canvas.width = Math.floor(w * dpr)
-    canvas.height = Math.floor(h * dpr)
-    canvas.style.width = w + 'px'
-    canvas.style.height = h + 'px'
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-
-    cfg = getConfig()
-    initParticles(true)
-  }
-
-  function rand(min, max) { return Math.random() * (max - min) + min }
-
-  function initParticles(keep) {
-    var target = cfg.count
-    if (!keep) particles = []
-
-    // 如果粒子过多则裁剪，过少则补齐
-    if (particles.length > target) particles.length = target
-    while (particles.length < target) {
-      particles.push({
-        x: rand(0, w),
-        y: rand(0, h),
-        vx: rand(-cfg.speed, cfg.speed),
-        vy: rand(-cfg.speed, cfg.speed)
-      })
-    }
-  }
-
-  function step() {
-    ctx.clearRect(0, 0, w, h)
-
-    // 画连线
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i]
-      for (var j = i + 1; j < particles.length; j++) {
-        var q = particles[j]
-        var dx = p.x - q.x
-        var dy = p.y - q.y
-        var dist2 = dx * dx + dy * dy
-        var maxD = cfg.linkDist
-        if (dist2 < maxD * maxD) {
-          var a = 1 - Math.sqrt(dist2) / maxD
-          // 根据距离衰减透明度
-          ctx.strokeStyle = cfg.line.replace('0.20', String(0.05 + a * 0.25))
-          ctx.beginPath()
-          ctx.moveTo(p.x, p.y)
-          ctx.lineTo(q.x, q.y)
-          ctx.stroke()
-        }
-      }
-    }
-
-    // 画粒子点 + 更新位置
-    ctx.fillStyle = cfg.dot
-    for (var k = 0; k < particles.length; k++) {
-      var r = particles[k]
-      r.x += r.vx
-      r.y += r.vy
-
-      // 边界反弹
-      if (r.x < 0) { r.x = 0; r.vx *= -1 }
-      if (r.x > w) { r.x = w; r.vx *= -1 }
-      if (r.y < 0) { r.y = 0; r.vy *= -1 }
-      if (r.y > h) { r.y = h; r.vy *= -1 }
-
-      ctx.beginPath()
-      ctx.arc(r.x, r.y, cfg.radius, 0, Math.PI * 2)
-      ctx.fill()
-    }
-
-    rafId = requestAnimationFrame(step)
-  }
-
-  // 启动
-  function start() {
-    resize()
-    initParticles(false)
-    cancelAnimationFrame(rafId)
-    step()
-  }
-
-  // 事件：resize 时重算（节流）
-  var t = 0
-  window.addEventListener('resize', function () {
-    clearTimeout(t)
-    t = setTimeout(function () { resize() }, 120)
-  })
-
-  // DOM 就绪后启动
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start)
-  } else {
-    start()
-  }
-})()
-/* ==== 到这里结束：白底粒子连线动画（canvas 粒子网络） ==== */
-/* 预清理：移除已有的 #particle-canvas，避免交互版初始化被阻断 */
-;(function(){ var c = document.getElementById('particle-canvas'); if (c) { try { c.remove(); } catch(e){} } })()
-/* ==== 从这里开始：可交互粒子连线背景（鼠标吸引 + 点击爆散 + 触摸支持） ==== */
-;(function () {
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  if (document.getElementById('particle-canvas')) return
-
-  var canvas = document.createElement('canvas')
-  canvas.id = 'particle-canvas'
-  document.body.insertBefore(canvas, document.body.firstChild)
-
-  var ctx = canvas.getContext('2d', { alpha: true })
-  var dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1))
-  var w = 0, h = 0
 
   function isMobile() { return window.innerWidth <= 900 }
 
-  function getCfg() {
+  function getConfig() {
     var mobile = isMobile()
+    // 获取真实文章数量
+    var count = getPostCount()
+    
+    // 如果文章数量太少（比如小于15），为了避免背景太空，可以设置一个倍数，或者就保持真实数量
+    // 用户要求“对应上”，所以这里优先用真实数量。
+    // 但为了不让屏幕太黑，如果数量很少，我们会自动增加连线距离和粒子大小
+    
+    // 动态调整连线距离：粒子越少，连线距离越长，确保能连起来
+    // 屏幕面积 / 粒子数 = 每个粒子占据的平均面积
+    // 连线距离应该略大于平均间距
+    var area = window.innerWidth * window.innerHeight
+    var avgArea = area / (count || 1)
+    var avgDist = Math.sqrt(avgArea)
+    var linkDist = Math.max(150, avgDist * 1.3) // 至少150，或者根据密度自动算
+
     return {
-      count: mobile ? 55 : 120,
-      baseSpeed: mobile ? 0.32 : 0.55,
-      radius: mobile ? 1.2 : 1.6,
-      linkDist: mobile ? 110 : 160,
-      repelDist: mobile ? 90 : 120,
-      // 暗色背景上用冷色系点线
-      dot: 'rgba(160,190,255,0.70)',
-      line: 'rgba(160,190,255,0.18)',
-      // 交互点影响强度
-      mouseForce: mobile ? 0.06 : 0.09,
-      // 点击爆散强度
-      burst: mobile ? 2.4 : 3.4
+      count: count,
+      speed: mobile ? 0.4 : 0.6,
+      radius: mobile ? 2 : 3, // 粒子稍大一点
+      linkDist: linkDist,
+      mouseDist: mobile ? 180 : 250,
+      // 颜色配置
+      dot: 'rgba(170, 200, 255, 0.8)',
+      line: 'rgba(140, 180, 255, 0.25)',
+      mouseLine: 'rgba(170, 210, 255, 0.45)'
     }
   }
 
-  var cfg = getCfg()
-  var ps = []
-  var raf = 0
-
-  // 交互点（鼠标/触摸）
-  var pointer = { x: -9999, y: -9999, active: false, burstTick: 0 }
+  var C = getConfig()
 
   function rand(min, max) { return Math.random() * (max - min) + min }
 
@@ -571,64 +463,37 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas.style.height = h + 'px'
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-    cfg = getCfg()
+    C = getConfig()
     initParticles(true)
   }
 
   function initParticles(keep) {
-    var target = cfg.count
-    if (!keep) ps = []
-    if (ps.length > target) ps.length = target
-    while (ps.length < target) {
-      ps.push({
-        x: rand(0, w),
-        y: rand(0, h),
-        vx: rand(-cfg.baseSpeed, cfg.baseSpeed),
-        vy: rand(-cfg.baseSpeed, cfg.baseSpeed)
-      })
-    }
-  }
-
-  // 让粒子速度保持“有活力但不飞走”
-  function clamp(v, lim) { return v > lim ? lim : (v < -lim ? -lim : v) }
-
-  function applyPointerForce(p) {
-    if (!pointer.active) return
-
-    var dx = pointer.x - p.x
-    var dy = pointer.y - p.y
-    var dist2 = dx * dx + dy * dy
-    var minD = cfg.repelDist
-
-    // 鼠标附近吸引（更自然）
-    var f = cfg.mouseForce
-    if (dist2 > 1) {
-      var dist = Math.sqrt(dist2)
-      var k = Math.max(0, 1 - dist / (cfg.linkDist * 1.2))
-      p.vx += (dx / dist) * f * k
-      p.vy += (dy / dist) * f * k
-    }
-
-    // 点击爆散：短暂把周围粒子“弹开”
-    if (pointer.burstTick > 0 && dist2 < minD * minD) {
-      var distB = Math.max(8, Math.sqrt(dist2))
-      var push = (1 - distB / minD) * cfg.burst
-      p.vx -= (dx / distB) * push
-      p.vy -= (dy / distB) * push
+    var target = C.count
+    // 总是重置粒子，以确保数量准确
+    if (!keep || ps.length !== target) {
+      ps = []
+      for (var i = 0; i < target; i++) {
+        ps.push({
+          x: rand(0, w),
+          y: rand(0, h),
+          vx: rand(-C.speed, C.speed),
+          vy: rand(-C.speed, C.speed)
+        })
+      }
     }
   }
 
   function step() {
     ctx.clearRect(0, 0, w, h)
 
-    // 背景淡淡的雾化渐变（暗色更高级）
-    var g = ctx.createRadialGradient(w * 0.6, h * 0.3, 80, w * 0.6, h * 0.3, Math.max(w, h))
-    g.addColorStop(0, 'rgba(90,120,255,0.10)')
-    g.addColorStop(1, 'rgba(0,0,0,0)')
-    ctx.fillStyle = g
-    ctx.fillRect(0, 0, w, h)
+    // 绘制背景微光（可选）
+    // var g = ctx.createRadialGradient(w * 0.5, h * 0.5, 0, w * 0.5, h * 0.5, Math.max(w, h))
+    // g.addColorStop(0, 'rgba(30, 50, 90, 0.05)')
+    // g.addColorStop(1, 'rgba(0, 0, 0, 0)')
+    // ctx.fillStyle = g
+    // ctx.fillRect(0, 0, w, h)
 
-    // 画连线
+    // 绘制连线
     for (var i = 0; i < ps.length; i++) {
       var p = ps[i]
       for (var j = i + 1; j < ps.length; j++) {
@@ -636,10 +501,10 @@ document.addEventListener('DOMContentLoaded', function () {
         var dx = p.x - q.x
         var dy = p.y - q.y
         var dist2 = dx * dx + dy * dy
-        var maxD = cfg.linkDist
+        var maxD = C.linkDist
         if (dist2 < maxD * maxD) {
-          var a = 1 - Math.sqrt(dist2) / maxD
-          ctx.strokeStyle = cfg.line.replace('0.18', String(0.04 + a * 0.22))
+          var alpha = 1 - Math.sqrt(dist2) / maxD
+          ctx.strokeStyle = C.line.replace('0.25', String(0.05 + alpha * 0.3))
           ctx.beginPath()
           ctx.moveTo(p.x, p.y)
           ctx.lineTo(q.x, q.y)
@@ -648,241 +513,86 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    // 画粒子 + 更新
-    ctx.fillStyle = cfg.dot
-    var lim = cfg.baseSpeed * 2.6
-    for (var k = 0; k < ps.length; k++) {
-      var r = ps[k]
-
-      applyPointerForce(r)
-
-      r.vx = clamp(r.vx, lim)
-      r.vy = clamp(r.vy, lim)
-
-      r.x += r.vx
-      r.y += r.vy
-
-      // 边界反弹
-      if (r.x < 0) { r.x = 0; r.vx *= -1 }
-      if (r.x > w) { r.x = w; r.vx *= -1 }
-      if (r.y < 0) { r.y = 0; r.vy *= -1 }
-      if (r.y > h) { r.y = h; r.vy *= -1 }
-
-      ctx.beginPath()
-      ctx.arc(r.x, r.y, cfg.radius, 0, Math.PI * 2)
-      ctx.fill()
+    // 鼠标互动
+    if (mouse.active) {
+      for (var k = 0; k < ps.length; k++) {
+        var r = ps[k]
+        var dx = r.x - mouse.x
+        var dy = r.y - mouse.y
+        var dist2 = dx * dx + dy * dy
+        var maxD = C.mouseDist
+        if (dist2 < maxD * maxD) {
+          var alpha = 1 - Math.sqrt(dist2) / maxD
+          ctx.strokeStyle = C.mouseLine.replace('0.45', String(0.1 + alpha * 0.5))
+          ctx.beginPath()
+          ctx.moveTo(mouse.x, mouse.y)
+          ctx.lineTo(r.x, r.y)
+          ctx.stroke()
+        }
+      }
     }
 
-    if (pointer.burstTick > 0) pointer.burstTick--
+    // 绘制粒子
+    ctx.fillStyle = C.dot
+    for (var i = 0; i < ps.length; i++) {
+      var p = ps[i]
+      p.x += p.vx
+      p.y += p.vy
+
+      // 边界反弹
+      if (p.x < 0) { p.x = 0; p.vx *= -1 }
+      else if (p.x > w) { p.x = w; p.vx *= -1 }
+      if (p.y < 0) { p.y = 0; p.vy *= -1 }
+      else if (p.y > h) { p.y = h; p.vy *= -1 }
+
+      ctx.beginPath()
+      ctx.arc(p.x, p.y, C.radius, 0, Math.PI * 2)
+      ctx.fill()
+    }
 
     raf = requestAnimationFrame(step)
   }
 
-  // 事件：鼠标/触摸交互
-  function setPointer(x, y, active) {
-    pointer.x = x
-    pointer.y = y
-    pointer.active = active
+  // 事件监听
+  function setMouse(x, y, active) {
+    mouse.x = x
+    mouse.y = y
+    mouse.active = active
   }
 
-  window.addEventListener('mousemove', function (e) {
-    setPointer(e.clientX, e.clientY, true)
-  })
+  window.addEventListener('mousemove', function (e) { setMouse(e.clientX, e.clientY, true) })
+  window.addEventListener('mouseleave', function () { setMouse(-9999, -9999, false) })
+  
+  // 触摸支持
+  window.addEventListener('touchstart', function(e){ 
+    if(e.touches[0]) setMouse(e.touches[0].clientX, e.touches[0].clientY, true)
+  }, {passive: true})
+  window.addEventListener('touchmove', function(e){ 
+    if(e.touches[0]) setMouse(e.touches[0].clientX, e.touches[0].clientY, true)
+  }, {passive: true})
+  window.addEventListener('touchend', function(){ setMouse(-9999, -9999, false) })
 
-  window.addEventListener('mouseleave', function () {
-    setPointer(-9999, -9999, false)
-  })
-
-  window.addEventListener('touchstart', function (e) {
-    if (!e.touches || !e.touches[0]) return
-    setPointer(e.touches[0].clientX, e.touches[0].clientY, true)
-  }, { passive: true })
-
-  window.addEventListener('touchmove', function (e) {
-    if (!e.touches || !e.touches[0]) return
-    setPointer(e.touches[0].clientX, e.touches[0].clientY, true)
-  }, { passive: true })
-
-  window.addEventListener('touchend', function () {
-    setPointer(-9999, -9999, false)
-  }, { passive: true })
-
-  // 点击爆散：附近粒子弹开
-  window.addEventListener('click', function (e) {
-    setPointer(e.clientX, e.clientY, true)
-    pointer.burstTick = 14
-    // 同时在点击处“补几颗新粒子”，增强手感
-    for (var i = 0; i < (isMobile() ? 4 : 8); i++) {
-      ps.push({
-        x: e.clientX + rand(-6, 6),
-        y: e.clientY + rand(-6, 6),
-        vx: rand(-cfg.baseSpeed, cfg.baseSpeed) * 2.2,
-        vy: rand(-cfg.baseSpeed, cfg.baseSpeed) * 2.2
-      })
-    }
-    // 限制总量不爆炸
-    if (ps.length > cfg.count + 20) ps.length = cfg.count + 20
-  })
-
-  // resize 节流
-  var t = 0
+  var timer = 0
   window.addEventListener('resize', function () {
-    clearTimeout(t)
-    t = setTimeout(function () { resize() }, 120)
+    clearTimeout(timer)
+    timer = setTimeout(resize, 200)
   })
 
   function start() {
     resize()
-    initParticles(false)
     cancelAnimationFrame(raf)
     step()
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start)
-  else start()
+  // 确保 DOM 加载后能获取到文章数量
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start)
+  } else {
+    // 稍微延迟以确保侧边栏已渲染
+    setTimeout(start, 100)
+  }
 })()
-/* ==== 到这里结束：可交互粒子连线背景 ==== */
-/* ==== 从这里开始：新版粒子（鼠标与周围点连线） ==== */
-;(function () {
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-  // 使用新 canvas id，避免和旧脚本冲突
-  if (document.getElementById('particle-canvas-2')) return
-
-  var canvas = document.createElement('canvas')
-  canvas.id = 'particle-canvas-2'
-  canvas.style.cssText = [
-    'position:fixed','inset:0','width:100vw','height:100vh',
-    'z-index:0','pointer-events:none'
-  ].join(';')
-  document.body.insertBefore(canvas, document.body.firstChild)
-
-  var ctx = canvas.getContext('2d', { alpha: true })
-  var dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1))
-  var w=0,h=0,raf=0
-
-  function isMobile(){ return window.innerWidth<=900 }
-  function cfg(){
-    var m=isMobile()
-    return {
-      count: m?55:120,
-      speed: m?0.35:0.55,
-      radius: m?1.15:1.55,
-      linkDist: m?120:170,
-      mouseDist: m?160:220,
-      dot:'rgba(170,200,255,0.70)',
-      line:'rgba(140,180,255,0.18)',
-      mouseLine:'rgba(170,210,255,0.35)'
-    }
-  }
-  var C = cfg()
-  var ps=[]
-  var mouse={x:-9999,y:-9999,active:false}
-
-  function rand(a,b){ return Math.random()*(b-a)+a }
-
-  function resize(){
-    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1))
-    w=Math.floor(window.innerWidth)
-    h=Math.floor(window.innerHeight)
-    canvas.width=Math.floor(w*dpr)
-    canvas.height=Math.floor(h*dpr)
-    canvas.style.width=w+'px'
-    canvas.style.height=h+'px'
-    ctx.setTransform(dpr,0,0,dpr,0,0)
-
-    C = cfg()
-    init(true)
-  }
-
-  function init(keep){
-    var target=C.count
-    if(!keep) ps=[]
-    if(ps.length>target) ps.length=target
-    while(ps.length<target){
-      ps.push({x:rand(0,w),y:rand(0,h),vx:rand(-C.speed,C.speed),vy:rand(-C.speed,C.speed)})
-    }
-  }
-
-  function step(){
-    ctx.clearRect(0,0,w,h)
-
-    var g=ctx.createRadialGradient(w*0.65,h*0.25,80,w*0.65,h*0.25,Math.max(w,h))
-    g.addColorStop(0,'rgba(100,140,255,0.10)')
-    g.addColorStop(1,'rgba(0,0,0,0)')
-    ctx.fillStyle=g
-    ctx.fillRect(0,0,w,h)
-
-    for(var i=0;i<ps.length;i++){
-      var p=ps[i]
-      for(var j=i+1;j<ps.length;j++){
-        var q=ps[j]
-        var dx=p.x-q.x, dy=p.y-q.y
-        var d2=dx*dx+dy*dy
-        var md=C.linkDist
-        if(d2<md*md){
-          var a=1-Math.sqrt(d2)/md
-          ctx.strokeStyle=C.line.replace('0.18', String(0.04 + a*0.22))
-          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke()
-        }
-      }
-    }
-
-    if(mouse.active){
-      for(var k=0;k<ps.length;k++){
-        var r=ps[k]
-        var dxm=r.x-mouse.x, dym=r.y-mouse.y
-        var dm2=dxm*dxm+dym*dym
-        var mm=C.mouseDist
-        if(dm2<mm*mm){
-          var a2=1-Math.sqrt(dm2)/mm
-          ctx.strokeStyle=C.mouseLine.replace('0.35', String(0.06 + a2*0.45))
-          ctx.beginPath(); ctx.moveTo(mouse.x,mouse.y); ctx.lineTo(r.x,r.y); ctx.stroke()
-        }
-      }
-      ctx.fillStyle='rgba(190,220,255,0.85)'
-      ctx.beginPath(); ctx.arc(mouse.x,mouse.y,2.2,0,Math.PI*2); ctx.fill()
-    }
-
-    ctx.fillStyle=C.dot
-    for(var t=0;t<ps.length;t++){
-      var s=ps[t]
-      s.x+=s.vx; s.y+=s.vy
-      if(s.x<0){s.x=0;s.vx*=-1}
-      if(s.x>w){s.x=w;s.vx*=-1}
-      if(s.y<0){s.y=0;s.vy*=-1}
-      if(s.y>h){s.y=h;s.vy*=-1}
-      ctx.beginPath(); ctx.arc(s.x,s.y,C.radius,0,Math.PI*2); ctx.fill()
-    }
-
-    raf=requestAnimationFrame(step)
-  }
-
-  function setMouse(x,y,on){ mouse.x=x; mouse.y=y; mouse.active=on }
-
-  window.addEventListener('mousemove', function(e){ setMouse(e.clientX,e.clientY,true) })
-  window.addEventListener('mouseleave', function(){ setMouse(-9999,-9999,false) })
-  window.addEventListener('touchstart', function(e){ if(e.touches&&e.touches[0]) setMouse(e.touches[0].clientX,e.touches[0].clientY,true) }, {passive:true})
-  window.addEventListener('touchmove', function(e){ if(e.touches&&e.touches[0]) setMouse(e.touches[0].clientX,e.touches[0].clientY,true) }, {passive:true})
-  window.addEventListener('touchend', function(){ setMouse(-9999,-9999,false) }, {passive:true})
-
-  var timer=0
-  window.addEventListener('resize', function(){
-    clearTimeout(timer)
-    timer=setTimeout(resize,120)
-  })
-
-  function start(){
-    resize()
-    init(false)
-    cancelAnimationFrame(raf)
-    step()
-  }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', start)
-  else start()
-})()
-/* ==== 到这里结束：新版粒子（鼠标与周围点连线） ==== */
+/* ==== 到这里结束：动态粒子背景 ==== */
 /* ==== 从这里开始：强制导航“搜索”跳转 /search/（避免 404） ==== */
 document.addEventListener('DOMContentLoaded', function () {
   var navLinks = Array.from(document.querySelectorAll('#nav a, #menus a, nav a'));

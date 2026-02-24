@@ -857,10 +857,10 @@ document.addEventListener('DOMContentLoaded', () => {
   refreshFn()
   unRefreshFn()
 
-  btf.getCSS('/css/bg-fog.css').catch(() => {})
-  btf.getScript('/js/bg-fog.js').then(() => {
-    if (window.bgFog && typeof window.bgFog.init === 'function') window.bgFog.init()
-  }).catch(() => {})
+  // btf.getCSS('/css/bg-fog.css').catch(() => {})
+  // btf.getScript('/js/bg-fog.js').then(() => {
+  //   if (window.bgFog && typeof window.bgFog.init === 'function') window.bgFog.init()
+  // }).catch(() => {})
 
   try {
     var linkIcon = document.querySelector('link[rel="shortcut icon"], link[rel="icon"]')
@@ -874,10 +874,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch (e) {}
 
-  btf.getCSS('/css/bg-effects.css').catch(() => {})
-  btf.getScript('/js/bg-leaves.js').then(() => {
-    if (window.bgLeaves && typeof window.bgLeaves.init === 'function') window.bgLeaves.init()
-  }).catch(() => {})
+  // btf.getCSS('/css/bg-effects.css').catch(() => {})
+  // btf.getScript('/js/bg-leaves.js').then(() => {
+  //   if (window.bgLeaves && typeof window.bgLeaves.init === 'function') window.bgLeaves.init()
+  // }).catch(() => {})
 
   // 處理 hexo-blog-encrypt 事件
   window.addEventListener('hexo-blog-decrypt', e => {

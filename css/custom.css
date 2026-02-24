@@ -211,10 +211,10 @@ body {
   border-bottom: 1px solid white;
 }
 
-/* 全局渐变背景 - 修正版 */
+/* 全局渐变背景 - 修正版：使用透明色让粒子 canvas 可见 */
 body {
-  background: linear-gradient(135deg, #0062be 0%, #925696 50%, #cc426e 75%, #fb0347 100%) fixed !important;
-  background-size: 400% 400%;
+  background: #0b1020 !important; /* 深蓝黑底色，作为粒子的背景 */
+  background-image: none !important; /* 移除其他背景图 */
   color: #ffffff !important; /* 确保文字颜色为白色 */
 }
 
@@ -300,7 +300,10 @@ body {
 .layout > div:first-child { width: 68% !important; }
 @media screen and (min-width: 900px) {
   .layout > #aside-content.aside-content { width: 360px !important; max-width: 360px; -webkit-flex: 0 0 360px; -ms-flex: 0 0 360px; flex: 0 0 360px; }
-  .layout > div:first-child { width: calc(100% - 360px) !important; }
+  /* 修复：只有当存在侧边栏时，才限制内容宽度 */
+  .layout:has(#aside-content) > div:first-child { width: calc(100% - 360px) !important; }
+  /* 修复：归档页等无侧边栏页面，内容居中且不限宽 */
+  .layout:not(:has(#aside-content)) > div:first-child { width: 100% !important; margin: 0 auto; }
 }
 .post-layout { max-width: 1000px; margin: 0 auto; padding: 20px; }
 .post-layout .post-header { margin-bottom: 12px; }
@@ -600,7 +603,7 @@ body::after {
 }
 
 /* 粒子画布：固定全屏，永远在内容后面 */
-#particle-canvas {
+#particle-canvas, #particle-canvas-2 {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -691,11 +694,11 @@ a, .site-title, .post-title, .card-widget .item-headline {
 }
 a:hover { color: rgba(140, 180, 255, 0.95) !important; }
 
-/* 顶部导航稍微暗一点 */
-#nav, #page-header {
-  background: rgba(10, 14, 28, 0.72) !important;
-  backdrop-filter: blur(10px);
-}
+/* 顶部导航稍微暗一点 - 已在下方统一处理 */
+/* #nav, #page-header { */
+/*   background: rgba(10, 14, 28, 0.72) !important; */
+/*   backdrop-filter: blur(10px); */
+/* } */
 
 /* 减少动态偏好：只保留暗色，不显示 canvas */
 @media (prefers-reduced-motion: reduce) {
@@ -723,7 +726,7 @@ a:hover { color: rgba(140, 180, 255, 0.95) !important; }
 
 /* 背景整体提亮 */
 html, body {
-  background: #131b33 !important; /* 原来更深：#0b1020 */
+  background: #0b1020 !important; /* 确保粒子背景可见 */
   color: rgba(255, 255, 255, 0.90) !important;
 }
 
@@ -762,7 +765,8 @@ hr,
 
 /* 顶部导航也提亮一点 */
 #nav, #page-header {
-  background: rgba(18, 24, 44, 0.72) !important;
+  background: #12182c !important; /* 纯色背景，防止透明导致的视觉干扰 */
+  z-index: 1000 !important; /* 确保层级最高 */
 }
 
 /* 链接颜色稍亮一点 */
@@ -878,7 +882,7 @@ body.page-categories .artalk {
 /* ==== 到这里结束：分类页底部白色区域改暗色 ==== */
 
 /* ==== 从这里开始：隐藏旧粒子 canvas（如果存在） ==== */
-#particle-canvas { display: none !important; }
+/* #particle-canvas { display: none !important; } */
 /* ==== 到这里结束：隐藏旧粒子 canvas ==== */
 /* ==== 从这里开始：首页 Banner 红叶暖调点缀色增强包 ==== */
 /* 仅首页生效 */
@@ -1082,7 +1086,7 @@ body[data-type="index"] #page-header .site-title {
 
 /* 1) 全站基础背景/文字兜底 */
 html, body{
-  background: var(--dark-bg) !important;
+  background: #0b1020 !important; /* 确保粒子背景可见 */
   color: var(--dark-text) !important;
 }
 
@@ -1096,13 +1100,13 @@ html, body{
 #comments, .comments, .comment-wrap,
 .card-widget, #aside-content .card-widget,
 .layout > div:first-child {
-  background: var(--dark-panel) !important;
-  border: 1px solid var(--dark-border) !important;
+  background: rgba(28, 38, 68, 0.45) !important; /* 降低不透明度，让粒子透出来 */
+  border: 1px solid rgba(255,255,255,0.08) !important;
   color: var(--dark-text) !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
   border-radius: 14px !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  /* -webkit-backdrop-filter: blur(10px); */
 }
 
 /* 3) 归档/时间线/列表（你截图里“归档”那种） */
@@ -1197,11 +1201,11 @@ pre, code, .highlight{
 }
 
 /* 9) 顶部导航与下拉菜单（兜底，避免其他页面不生效） */
-#nav, #page-header{
-  background: rgba(10, 12, 18, 0.55) !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
+/* #nav, #page-header{ */
+/*   background: rgba(10, 12, 18, 0.55) !important; */
+/*   backdrop-filter: blur(10px); */
+/*   -webkit-backdrop-filter: blur(10px); */
+/* } */
 #nav .menus_item_child,
 .menus_item_child{
   background: var(--dark-panel-strong) !important;
@@ -1240,7 +1244,7 @@ html[data-theme='dark'] {
 }
 
 html[data-theme='dark'] body {
-  background: var(--bg-base) url('/img/bg-autumn-wreck.jpg') center/cover fixed no-repeat !important;
+  background: var(--bg-base) url('/img/autumn-forest.png') center/cover fixed no-repeat !important;
   color: var(--text-1) !important;
 }
 
@@ -1275,8 +1279,8 @@ html[data-theme='dark'] #page {
   background: var(--card-bg) !important;
   border: 1px solid var(--stroke) !important;
   box-shadow: var(--card-shadow), var(--card-glow) !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* /* backdrop-filter: blur(10px); */
+  /* -webkit-backdrop-filter: blur(10px); */
   border-radius: 18px;
 }
 
@@ -1349,8 +1353,8 @@ html[data-theme='dark'] #footer {
     0 14px 40px rgba(0, 0, 0, 0.45),
     0 0 0 1px rgba(255, 255, 255, 0.06),
     0 10px 30px rgba(91, 13, 19, 0.18) !important; /* 酒红氛围 */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  /* -webkit-backdrop-filter: blur(10px); */
   border-radius: 18px;
 }
 
@@ -1548,4 +1552,96 @@ pre[class*="language-"],
 #aside-content .fa-angle-down,
 #aside-content .fa-chevron-down {
   display: none !important;
+}
+
+/* 性能优化：强制关闭所有毛玻璃效果，解决长页面滚动卡顿问题 */
+* {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+
+
+/* ==========================================================================
+   Deep Blue Tech Grid Theme - 2024-05-21 Update
+   Ref: User Request for "Deep Blue Technology Dot-Line Grid"
+   ========================================================================== */
+
+/* 1. Global Background (Body) */
+html, body {
+    /* Base Color: Deep Navy Blue Gradient (Center light, edges dark) */
+    background-color: #050a14 !important; /* Fallback */
+    background-image: 
+        /* Top Layer: Dot-Line Network Grid SVG (Sparse dots, thin lines) */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='grid' width='100' height='100' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='50' cy='50' r='2' fill='rgba(100,200,255,0.15)'/%3E%3Cpath d='M0 0 L100 100 M100 0 L0 100' stroke='rgba(100,180,255,0.08)' stroke-width='0.5'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)'/%3E%3C/svg%3E"),
+        /* Bottom Layer: Radial Gradient (Deep Blue) */
+        radial-gradient(circle at 50% 30%, #162447 0%, #050a14 90%) !important;
+    
+    background-repeat: repeat, no-repeat !important;
+    background-position: center top, center center !important;
+    background-attachment: fixed !important; /* Fixed background for tech feel */
+    background-size: 100px 100px, cover !important;
+    
+    color: rgba(235, 245, 255, 0.9) !important; /* Light text */
+}
+
+/* 2. Content Cards (Readability) */
+/* Make cards stand out with a semi-transparent dark blue and subtle glow */
+#body-wrap, #page, #post, .card-widget, #recent-posts .recent-post-item,
+#aside-content .card-widget, .layout > div:first-child {
+    background: rgba(13, 22, 40, 0.75) !important; /* Darker, slightly transparent */
+    backdrop-filter: blur(8px) !important; /* Frosted glass */
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(100, 180, 255, 0.15) !important; /* Tech blue border */
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4), /* Deep shadow */
+        0 0 0 1px rgba(100, 180, 255, 0.05) inset !important; /* Inner highlight */
+    border-radius: 12px !important;
+}
+
+/* 3. Text & Link Contrast */
+a, .site-title, .post-title, .card-widget .item-headline {
+    color: rgba(240, 248, 255, 0.95) !important;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+a:hover {
+    color: #64b5f6 !important; /* Bright tech blue on hover */
+    text-shadow: 0 0 8px rgba(100, 181, 246, 0.6);
+}
+
+/* 4. Footer & Nav (Consistent Tech Style) */
+#footer, #nav, #page-header:not(.full_page) #nav {
+    background: rgba(5, 10, 20, 0.85) !important;
+    backdrop-filter: blur(10px) !important;
+    border-top: 1px solid rgba(100, 180, 255, 0.1) !important;
+}
+
+/* Remove conflicting background overlays from previous themes */
+#web_bg, body::before, body::after {
+    background: transparent !important;
+    background-image: none !important;
+}
+
+/* Re-enable backdrop-filter if disabled by previous styles */
+* {
+    backdrop-filter: inherit;
+    -webkit-backdrop-filter: inherit;
+}
+
+/* 优化页面顶部 Banner 高度 - 针对非首页（如友情链接页） */
+#page-header.not-home-page {
+  height: 220px !important;
+}
+
+@media screen and (max-width: 768px) {
+  #page-header.not-home-page {
+    height: 180px !important;
+  }
+}
+
+/* 调整标题位置，确保垂直居中 */
+#page-header #page-site-info {
+  top: 50% !important;
+  transform: translateY(-50%);
 }

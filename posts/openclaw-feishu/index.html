@@ -190,11 +190,8 @@
 
       <div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-list"></i><span>目录</span></div><div class="toc-content"><ul class="toc"></ul></div><div class="toc-percentage"></div></div>
       <div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span><div class="recent-percentage"></div></div><div class="aside-list">
-        <div class="aside-list-item"><a class="thumbnail" href="/posts/d85c4342/" title="Butterfly主题标签外挂功能演示"><img src= "/img/loading.gif" data-lazy-src="/img/placeholder.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Butterfly主题标签外挂功能演示"/></a><div class="content"><a class="title" href="/posts/d85c4342/" title="Butterfly主题标签外挂功能演示">Butterfly主题标签外挂功能演示</a><time datetime="2025-08-24T07:00:00.000Z" title="发表于 2025-08-24 15:00:00">2025-08-24</time></div></div>
-        <div class="aside-list-item"><a class="thumbnail" href="/posts/f0d8e1c0/" title="Butterfly主题功能演示"><img src= "/img/loading.gif" data-lazy-src="/img/butterfly-cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Butterfly主题功能演示"/></a><div class="content"><a class="title" href="/posts/f0d8e1c0/" title="Butterfly主题功能演示">Butterfly主题功能演示</a><time datetime="2025-08-24T04:00:00.000Z" title="发表于 2025-08-24 12:00:00">2025-08-24</time></div></div>
-        <div class="aside-list-item"><a class="thumbnail" href="/posts/68534d0c/" title="Butterfly主题使用文档"><img src= "/img/loading.gif" data-lazy-src="/img/placeholder.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Butterfly主题使用文档"/></a><div class="content"><a class="title" href="/posts/68534d0c/" title="Butterfly主题使用文档">Butterfly主题使用文档</a><time datetime="2025-08-23T18:37:25.000Z" title="发表于 2025-08-24 02:37:25">2025-08-24</time></div></div>
+        <div class="aside-list-item"><a class="thumbnail" href="/posts/openclaw-feishu/index.html" title="在 Linux 上从零搭建 OpenClaw + 飞书机器人"><img src= "/img/loading.gif" data-lazy-src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="在 Linux 上从零搭建 OpenClaw + 飞书机器人"/></a><div class="content"><a class="title" href="/posts/openclaw-feishu/index.html" title="在 Linux 上从零搭建 OpenClaw + 飞书机器人">在 Linux 上从零搭建 OpenClaw + 飞书机器人</a><time datetime="2026-02-20T00:00:00.000Z" title="发表于 2026-02-20 00:00:00">2026-02-20</time></div></div>
         <div class="aside-list-item"><a class="thumbnail" href="/posts/5c2fafc7/" title="第一篇文章"><img src= "/img/loading.gif" data-lazy-src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第一篇文章"/></a><div class="content"><a class="title" href="/posts/5c2fafc7/" title="第一篇文章">第一篇文章</a><time datetime="2025-08-23T09:40:31.000Z" title="发表于 2025-08-23 17:40:31">2025-08-23</time></div></div>
-        <div class="aside-list-item"><a class="thumbnail" href="/posts/4a17b156/" title="Hello World"><img src= "/img/loading.gif" data-lazy-src="/img/404.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/posts/4a17b156/" title="Hello World">Hello World</a><time datetime="2025-08-23T09:00:00.000Z" title="发表于 2025-08-23 17:00:00">2025-08-23</time></div></div>
       </div></div>
     </div>
     </main>
@@ -234,6 +231,11 @@
     fetch('/articles/openclaw-feishu.txt').then(r=>r.text()).then(t=>{
       const lines = t.split(/\r?\n/)
       const contentWrap = document.getElementById('article-container')
+      // 清空容器（移除 loading）
+      contentWrap.innerHTML = ''
+      
+      const fragment = document.createDocumentFragment()
+      
       const blog = document.createElement('div')
       blog.className = 'blog'
       blog.innerHTML = `
@@ -242,11 +244,15 @@
         <p class="desc">完整教程：Node/nvm、OpenClaw、飞书插件安装与修复、Gateway 启停、代理配置（Clash/Mihomo）、Wayland 权限与一键验收脚本。</p>
         <a class="detail" href="#article-text-body">查看详情</a>
       `
-      contentWrap.appendChild(blog)
+      fragment.appendChild(blog)
+      
       const content = document.createElement('div')
       content.id = 'article-text-body'
-      contentWrap.appendChild(content)
+      fragment.appendChild(content)
+      
       const toc = document.querySelector('#card-toc .toc-content .toc')
+      const tocFragment = document.createDocumentFragment()
+      
       let buf = []
       const flushPara = () => {
         if (buf.length) {
@@ -283,18 +289,44 @@
           a.textContent = s
           a.className = 'toc-link'
           li.appendChild(a)
-          if (toc) toc.appendChild(li)
+          tocFragment.appendChild(li)
           return
         }
         if (isCmd(s)) { flushPara(); codeBuf.push(s); return }
         buf.push(s)
       })
       flushPara(); flushCode()
-      document.querySelectorAll('#article-text-body pre code').forEach(block=>{ try { hljs.highlightElement(block) } catch(e){} })
-      if (window.initTocObserver) {
-        window.initTocObserver({ container: '#article-container', tocSelector: '#card-toc .toc-content .toc' })
-      }
-    }).catch(()=>{
+      
+      // 一次性挂载 DOM
+      contentWrap.appendChild(fragment)
+      if (toc) toc.appendChild(tocFragment)
+      
+      // 延迟高亮和滚动，避免阻塞主线程
+      requestAnimationFrame(() => {
+        document.querySelectorAll('#article-text-body pre code').forEach(block=>{ try { hljs.highlightElement(block) } catch(e){} })
+        
+        if (window.initTocObserver) {
+          window.initTocObserver({ container: '#article-container', tocSelector: '#card-toc .toc-content .toc' })
+        }
+        
+        // 修复锚点定位
+        if (window.location.hash) {
+          const id = decodeURIComponent(window.location.hash.substring(1))
+          const target = document.getElementById(id)
+          if (target) {
+            setTimeout(() => {
+              const top = (typeof btf !== 'undefined' && btf.getEleTop) ? btf.getEleTop(target) : target.offsetTop
+              if (typeof btf !== 'undefined' && btf.scrollToDest) {
+                btf.scrollToDest(top, 300)
+              } else {
+                window.scrollTo({ top: top, behavior: 'smooth' })
+              }
+            }, 100)
+          }
+        }
+      })
+    }).catch((e)=>{
+      console.error(e)
       document.getElementById('article-container').textContent = '无法加载文章正文。'
     })
   </script>
