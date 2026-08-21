@@ -1,0 +1,131 @@
+/*
+ * 顶部导航下拉菜单修复
+ * 用途：修正“列表 -> 音乐 / 相册 / 时间轴”下拉框偏移、尺寸不统一和文字图标未对齐的问题。
+ * 只作用于桌面端顶部导航，不影响手机侧边菜单。
+ */
+
+@media (min-width: 769px) {
+  /* 让带子菜单的顶级导航项成为下拉菜单的定位基准。 */
+  #nav #menus .menus_items > .menus_item {
+    position: relative !important;
+  }
+
+  /* “列表”按钮本身统一成一行，避免图标/文字/箭头上下错位。 */
+  #nav #menus .menus_items > .menus_item > .site-page.group {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    height: 44px !important;
+    line-height: 44px !important;
+    white-space: nowrap !important;
+  }
+
+  #nav #menus .menus_items > .menus_item > .site-page.group > i {
+    line-height: 1 !important;
+    margin: 0 !important;
+  }
+
+  #nav #menus .menus_items > .menus_item > .site-page.group > .fa-chevron-down,
+  #nav #menus .menus_items > .menus_item > .site-page.group > .fa-chevron-up {
+    margin-left: 1px !important;
+    font-size: .78em !important;
+  }
+
+  /*
+   * 子菜单以“列表”按钮中心为基准展开。
+   * 覆盖主题原本可能存在的 left/right 偏移，防止菜单贴到页面左边。
+   */
+  #nav #menus .menus_items > .menus_item > .menus_item_child {
+    position: absolute !important;
+    top: calc(100% - 2px) !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    min-width: 138px !important;
+    width: max-content !important;
+    max-width: 210px !important;
+    margin: 0 !important;
+    padding: 8px !important;
+    list-style: none !important;
+    box-sizing: border-box !important;
+    border: 1px solid rgba(255, 255, 255, .10) !important;
+    border-radius: 11px !important;
+    background: rgba(13, 22, 42, .96) !important;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, .32) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 1005 !important;
+  }
+
+  /* 每个入口统一高度与左右留白。 */
+  #nav #menus .menus_items > .menus_item > .menus_item_child > li {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #nav #menus .menus_items > .menus_item > .menus_item_child > li + li {
+    margin-top: 3px !important;
+  }
+
+  #nav #menus .menus_items > .menus_item > .menus_item_child > li > a.site-page.child,
+  #nav #menus .menus_items > .menus_item > .menus_item_child > li > a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 9px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 42px !important;
+    padding: 0 13px !important;
+    box-sizing: border-box !important;
+    border-radius: 8px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+    text-decoration: none !important;
+  }
+
+  /* 固定图标占位宽度，让三个文字的起始位置完全一致。 */
+  #nav #menus .menus_items > .menus_item > .menus_item_child > li > a > i {
+    flex: 0 0 18px !important;
+    width: 18px !important;
+    margin: 0 !important;
+    text-align: center !important;
+    line-height: 1 !important;
+  }
+
+  #nav #menus .menus_items > .menus_item > .menus_item_child > li > a > span {
+    display: block !important;
+    min-width: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  /* 子菜单链接不使用顶部导航的下划线伪元素。 */
+  #nav #menus .menus_items > .menus_item > .menus_item_child a::after,
+  #nav #menus .menus_items > .menus_item > .menus_item_child .site-page::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  #nav #menus .menus_items > .menus_item > .menus_item_child > li > a:hover {
+    background: rgba(103, 177, 255, .13) !important;
+  }
+}
+
+/* 笔记本窄屏：稍微缩小下拉菜单，避免导航栏拥挤。 */
+@media (min-width: 769px) and (max-width: 1100px) {
+  #nav #menus .menus_items > .menus_item > .menus_item_child {
+    min-width: 126px !important;
+    padding: 7px !important;
+  }
+
+  #nav #menus .menus_items > .menus_item > .menus_item_child > li > a {
+    min-height: 40px !important;
+    padding-left: 11px !important;
+    padding-right: 11px !important;
+    font-size: .94em !important;
+  }
+}
