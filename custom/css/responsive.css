@@ -1,31 +1,497 @@
-/* 响应式增强样式 */
+/* 响应式增强样式：保留现有视觉效果，同时降低移动端重绘压力 */
+
+/* 超宽屏：保持内容居中，避免无限拉伸 */
 @media (min-width: 2000px) {
   .layout {
-    max-width: 90%;
-    margin: 0 auto;
+    width: min(90%, 1680px) !important;
+    max-width: 1680px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 }
 
-/* 优化中等屏幕显示 */
+/* 桌面/笔记本：给主内容留出稳定宽度 */
 @media (min-width: 1200px) and (max-width: 1999px) {
   .layout {
-    max-width: 85%;
-    margin: 0 auto;
+    width: min(92%, 1400px) !important;
+    max-width: 1400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 }
 
-/* 移动设备导航优化 */
+/* 平板：减少两侧空白，避免桌面布局被硬塞进窄屏 */
+@media (min-width: 769px) and (max-width: 1100px) {
+  .layout {
+    width: calc(100% - 32px) !important;
+    max-width: none !important;
+  }
+
+  #aside-content {
+    max-width: 300px !important;
+  }
+}
+
+/* 手机和平板竖屏 */
 @media (max-width: 768px) {
-  .nav-fixed {
-    padding: 0 15px;
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
-  .menu-item {
-    margin: 0 5px;
-  }
-
-  .aside-content {
+  html,
+  body {
     width: 100%;
     max-width: 100%;
+    overflow-x: hidden;
   }
+
+  body {
+    /* 手机端固定背景在滚动时开销很大，改成 scroll 但保留同一张背景图。 */
+    background-attachment: scroll !important;
+  }
+
+  #web_bg {
+    background-attachment: scroll !important;
+    background-position: center top !important;
+  }
+
+  /* 手机端仍保留玻璃质感，但减小模糊半径，显著降低 GPU 重绘压力。 */
+  .card-widget,
+  #post,
+  #page,
+  #recent-posts .recent-post-item,
+  .layout > div:first-child,
+  #aside-content .card-widget {
+    -webkit-backdrop-filter: blur(4px) !important;
+    backdrop-filter: blur(4px) !important;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22) !important;
+    border-radius: 12px !important;
+  }
+
+  /* 移动端不执行 hover 位移，避免触摸滚动时出现不必要的合成层变化。 */
+  #recent-posts > .recent-post-item:hover,
+  #recent-posts .recent-post-item:hover,
+  .card-widget:hover,
+  .layout > div:first-child:not(.nc):hover {
+    transform: none !important;
+  }
+
+  /* 首页头图使用更适合手机的高度，避免首屏占满。 */
+  #page-header.full_page,
+  #page-header.full_page .top-img,
+  .top-img {
+    min-height: 62svh !important;
+    height: 62svh !important;
+    max-height: 620px !important;
+    background-position: center center !important;
+  }
+
+  #site-info {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  #site-title,
+  .top-img .site-title {
+    font-size: clamp(2rem, 10vw, 3rem) !important;
+    line-height: 1.15 !important;
+    text-align: center;
+  }
+
+  #site-subtitle,
+  .top-img .site-subtitle {
+    font-size: clamp(.95rem, 4vw, 1.15rem) !important;
+    line-height: 1.5 !important;
+    padding: 0 12px;
+    text-align: center;
+  }
+
+  /* 导航栏：给刘海屏/圆角屏预留安全区，并扩大菜单按钮触摸范围。 */
+  #nav {
+    padding-left: max(12px, env(safe-area-inset-left)) !important;
+    padding-right: max(12px, env(safe-area-inset-right)) !important;
+  }
+
+  #toggle-menu,
+  #toggle-menu .site-page {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #blog-info .site-name {
+    display: inline-block;
+    max-width: 52vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 主布局统一单列，覆盖旧样式中的 68%、360px 侧栏等桌面宽度。 */
+  .layout,
+  #content-inner.layout,
+  #content-outer.layout {
+    display: block !important;
+    width: calc(100% - 24px) !important;
+    max-width: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .layout > div:first-child,
+  .layout > div:first-child:not(.nc),
+  .layout > .post,
+  .layout > article.post,
+  .layout > #main,
+  .post-layout,
+  #post,
+  #page {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .post-layout {
+    padding: 12px !important;
+  }
+
+  .post-layout .post-body {
+    display: block !important;
+  }
+
+  .article-content,
+  #article-container {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    box-sizing: border-box;
+  }
+
+  /* 侧栏手机端继续隐藏，避免正文被挤窄；菜单中的站点信息仍保留。 */
+  #aside-content,
+  .aside-content {
+    display: none !important;
+  }
+
+  /* 首页文章卡片切成纵向，封面和文字在窄屏下都能完整显示。 */
+  #recent-posts .recent-post-item {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden;
+  }
+
+  #recent-posts .recent-post-item .post_cover,
+  #recent-posts .recent-post-item .post_cover.left,
+  #recent-posts .recent-post-item .post_cover.right {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    order: 0 !important;
+  }
+
+  #recent-posts .recent-post-item .post_cover img,
+  #recent-posts .recent-post-item .post-bg {
+    width: 100% !important;
+    height: clamp(170px, 52vw, 260px) !important;
+    object-fit: cover !important;
+  }
+
+  #recent-posts .recent-post-item > .recent-post-info {
+    width: 100% !important;
+    padding: 16px !important;
+    box-sizing: border-box;
+  }
+
+  #recent-posts .recent-post-item > .recent-post-info > .article-title {
+    -webkit-line-clamp: 2 !important;
+    font-size: 1.15rem !important;
+    line-height: 1.45 !important;
+  }
+
+  #recent-posts .recent-post-item > .recent-post-info > .content {
+    -webkit-line-clamp: 3 !important;
+    font-size: .94rem !important;
+    line-height: 1.65 !important;
+  }
+
+  /* 文章正文中的媒体和代码不允许撑破屏幕。 */
+  #article-container img,
+  #article-container video,
+  #article-container iframe,
+  #article-container svg,
+  .article-content img,
+  .article-content video,
+  .article-content iframe {
+    max-width: 100% !important;
+    height: auto;
+  }
+
+  #article-container pre,
+  #article-container .highlight,
+  .article-content pre {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #article-container table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 避免长链接、英文、路径和代码把页面横向撑开。 */
+  #article-container,
+  #article-container p,
+  #article-container li,
+  #article-container a,
+  .recent-post-info {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* 弹出侧边菜单宽度适配小屏和安全区。 */
+  #sidebar-menus {
+    width: min(86vw, 330px) !important;
+    padding-bottom: max(18px, env(safe-area-inset-bottom)) !important;
+  }
+
+  #sidebar-menus .site-page,
+  #sidebar-menus .menus_item_child a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* 底部和右下角按钮避免被手机手势条遮挡。 */
+  #footer {
+    padding-left: max(14px, env(safe-area-inset-left)) !important;
+    padding-right: max(14px, env(safe-area-inset-right)) !important;
+    padding-bottom: max(24px, env(safe-area-inset-bottom)) !important;
+  }
+
+  #rightside {
+    right: max(8px, env(safe-area-inset-right)) !important;
+    bottom: max(12px, env(safe-area-inset-bottom)) !important;
+  }
+
+  /* 背景特效继续保留；JS 会在手机端自动降到低 DPR、低帧率、低数量。 */
+  #bg-fog,
+  #bg-leaves,
+  #particle-canvas,
+  #particle-canvas-2,
+  #particle-canvas-dynamic {
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+}
+
+/* 很窄的手机进一步收紧间距 */
+@media (max-width: 420px) {
+  .layout,
+  #content-inner.layout,
+  #content-outer.layout {
+    width: calc(100% - 16px) !important;
+  }
+
+  #recent-posts .recent-post-item > .recent-post-info {
+    padding: 13px !important;
+  }
+
+  #site-title,
+  .top-img .site-title {
+    font-size: clamp(1.8rem, 11vw, 2.55rem) !important;
+  }
+}
+
+/* 用户主动开启“减少动态效果”时，彻底尊重系统设置。 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+
+  #bg-fog,
+  #bg-leaves,
+  #particle-canvas,
+  #particle-canvas-2,
+  #particle-canvas-dynamic {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   桌面端统一尺寸规则
+   解决：首页主栏偏窄、右侧栏过宽、最新文章缩略图和标题被挤压等问题。
+   ========================================================= */
+@media (min-width: 901px) {
+  /* 整体内容区控制在更协调的宽度，主栏优先获得空间。 */
+  #content-inner.layout,
+  #content-outer.layout,
+  .layout {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 24px !important;
+    width: min(calc(100% - 48px), 1520px) !important;
+    max-width: 1520px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* 覆盖旧 CSS 中 68% 和 360px 的硬编码，正文区保持更舒展。 */
+  .layout > div:first-child,
+  .layout > div:first-child:not(.nc),
+  .layout > .recent-posts,
+  .layout > .post,
+  .layout > article.post,
+  .layout > #main {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  .layout > #aside-content.aside-content,
+  .layout > #aside-content,
+  #aside-content.aside-content {
+    flex: 0 0 320px !important;
+    width: 320px !important;
+    max-width: 320px !important;
+    min-width: 0 !important;
+  }
+
+  /* 首页文章卡片比例统一，图片不再抢占过多正文宽度。 */
+  #recent-posts .recent-post-item {
+    min-height: 225px !important;
+    overflow: hidden;
+  }
+
+  #recent-posts .recent-post-item .post_cover,
+  #recent-posts .recent-post-item .post_cover.left,
+  #recent-posts .recent-post-item .post_cover.right {
+    width: 40% !important;
+    max-width: 40% !important;
+    flex: 0 0 40% !important;
+  }
+
+  #recent-posts .recent-post-item > .recent-post-info {
+    width: 60% !important;
+    min-width: 0 !important;
+    padding: 24px 26px !important;
+    box-sizing: border-box;
+  }
+
+  /* 右侧栏所有卡片统一内边距，避免有的卡片显得过挤。 */
+  #aside-content .card-widget {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    box-sizing: border-box;
+  }
+
+  /* “最新文章”列表：修复图片失败后 alt 文本撑开和标题强制逐字断行。 */
+  #aside-content .aside-list > .aside-list-item {
+    align-items: center !important;
+    min-width: 0 !important;
+    padding: 10px 0 !important;
+    gap: 12px;
+  }
+
+  #aside-content .aside-list > .aside-list-item .thumbnail {
+    position: relative;
+    display: block;
+    flex: 0 0 72px !important;
+    width: 72px !important;
+    height: 72px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: url('/img/placeholder.jpg') center/cover no-repeat,
+                rgba(255, 255, 255, .06) !important;
+  }
+
+  #aside-content .aside-list > .aside-list-item .thumbnail img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    font-size: 0 !important;
+    color: transparent !important;
+    text-indent: -9999px !important;
+  }
+
+  #aside-content .aside-list > .aside-list-item .content {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    padding-left: 0 !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  #aside-content .aside-list > .aside-list-item .content > .title {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    overflow: hidden !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.45 !important;
+    font-size: .96rem !important;
+  }
+
+  #aside-content .aside-list > .aside-list-item .content > time {
+    margin-top: 5px !important;
+    line-height: 1.2 !important;
+  }
+}
+
+/* 中等桌面/小笔记本再稍微收紧侧栏，避免正文被挤。 */
+@media (min-width: 901px) and (max-width: 1199px) {
+  #content-inner.layout,
+  #content-outer.layout,
+  .layout {
+    width: calc(100% - 32px) !important;
+    gap: 18px !important;
+  }
+
+  .layout > #aside-content.aside-content,
+  .layout > #aside-content,
+  #aside-content.aside-content {
+    flex-basis: 285px !important;
+    width: 285px !important;
+    max-width: 285px !important;
+  }
+
+  #aside-content .aside-list > .aside-list-item .thumbnail {
+    flex-basis: 64px !important;
+    width: 64px !important;
+    height: 64px !important;
+  }
+}
+
+/* 主文章封面即使加载失败，也保留稳定占位背景，不显示破图 alt 文本。 */
+#recent-posts .recent-post-item .post_cover {
+  background: url('/img/placeholder.jpg') center/cover no-repeat,
+              rgba(255, 255, 255, .05) !important;
+}
+
+#recent-posts .recent-post-item .post_cover img {
+  font-size: 0 !important;
+  color: transparent !important;
 }
