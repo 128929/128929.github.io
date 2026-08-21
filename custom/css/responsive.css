@@ -336,3 +336,162 @@
     display: none !important;
   }
 }
+
+/* =========================================================
+   桌面端统一尺寸规则
+   解决：首页主栏偏窄、右侧栏过宽、最新文章缩略图和标题被挤压等问题。
+   ========================================================= */
+@media (min-width: 901px) {
+  /* 整体内容区控制在更协调的宽度，主栏优先获得空间。 */
+  #content-inner.layout,
+  #content-outer.layout,
+  .layout {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 24px !important;
+    width: min(calc(100% - 48px), 1520px) !important;
+    max-width: 1520px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* 覆盖旧 CSS 中 68% 和 360px 的硬编码，正文区保持更舒展。 */
+  .layout > div:first-child,
+  .layout > div:first-child:not(.nc),
+  .layout > .recent-posts,
+  .layout > .post,
+  .layout > article.post,
+  .layout > #main {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  .layout > #aside-content.aside-content,
+  .layout > #aside-content,
+  #aside-content.aside-content {
+    flex: 0 0 320px !important;
+    width: 320px !important;
+    max-width: 320px !important;
+    min-width: 0 !important;
+  }
+
+  /* 首页文章卡片比例统一，图片不再抢占过多正文宽度。 */
+  #recent-posts .recent-post-item {
+    min-height: 225px !important;
+    overflow: hidden;
+  }
+
+  #recent-posts .recent-post-item .post_cover,
+  #recent-posts .recent-post-item .post_cover.left,
+  #recent-posts .recent-post-item .post_cover.right {
+    width: 40% !important;
+    max-width: 40% !important;
+    flex: 0 0 40% !important;
+  }
+
+  #recent-posts .recent-post-item > .recent-post-info {
+    width: 60% !important;
+    min-width: 0 !important;
+    padding: 24px 26px !important;
+    box-sizing: border-box;
+  }
+
+  /* 右侧栏所有卡片统一内边距，避免有的卡片显得过挤。 */
+  #aside-content .card-widget {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    box-sizing: border-box;
+  }
+
+  /* “最新文章”列表：修复图片失败后 alt 文本撑开和标题强制逐字断行。 */
+  #aside-content .aside-list > .aside-list-item {
+    align-items: center !important;
+    min-width: 0 !important;
+    padding: 10px 0 !important;
+    gap: 12px;
+  }
+
+  #aside-content .aside-list > .aside-list-item .thumbnail {
+    position: relative;
+    display: block;
+    flex: 0 0 72px !important;
+    width: 72px !important;
+    height: 72px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: url('/img/placeholder.jpg') center/cover no-repeat,
+                rgba(255, 255, 255, .06) !important;
+  }
+
+  #aside-content .aside-list > .aside-list-item .thumbnail img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    font-size: 0 !important;
+    color: transparent !important;
+    text-indent: -9999px !important;
+  }
+
+  #aside-content .aside-list > .aside-list-item .content {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    padding-left: 0 !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  #aside-content .aside-list > .aside-list-item .content > .title {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    overflow: hidden !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.45 !important;
+    font-size: .96rem !important;
+  }
+
+  #aside-content .aside-list > .aside-list-item .content > time {
+    margin-top: 5px !important;
+    line-height: 1.2 !important;
+  }
+}
+
+/* 中等桌面/小笔记本再稍微收紧侧栏，避免正文被挤。 */
+@media (min-width: 901px) and (max-width: 1199px) {
+  #content-inner.layout,
+  #content-outer.layout,
+  .layout {
+    width: calc(100% - 32px) !important;
+    gap: 18px !important;
+  }
+
+  .layout > #aside-content.aside-content,
+  .layout > #aside-content,
+  #aside-content.aside-content {
+    flex-basis: 285px !important;
+    width: 285px !important;
+    max-width: 285px !important;
+  }
+
+  #aside-content .aside-list > .aside-list-item .thumbnail {
+    flex-basis: 64px !important;
+    width: 64px !important;
+    height: 64px !important;
+  }
+}
+
+/* 主文章封面即使加载失败，也保留稳定占位背景，不显示破图 alt 文本。 */
+#recent-posts .recent-post-item .post_cover {
+  background: url('/img/placeholder.jpg') center/cover no-repeat,
+              rgba(255, 255, 255, .05) !important;
+}
+
+#recent-posts .recent-post-item .post_cover img {
+  font-size: 0 !important;
+  color: transparent !important;
+}
