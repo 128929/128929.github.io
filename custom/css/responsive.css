@@ -288,10 +288,14 @@
     bottom: max(12px, env(safe-area-inset-bottom)) !important;
   }
 
-  /* 装饰 Canvas 手机上保留粒子层；重型雾和落叶由 JS 自动降级/关闭。 */
+  /* 背景特效继续保留；JS 会在手机端自动降到低 DPR、低帧率、低数量。 */
   #bg-fog,
-  #bg-leaves {
-    display: none !important;
+  #bg-leaves,
+  #particle-canvas,
+  #particle-canvas-2,
+  #particle-canvas-dynamic {
+    max-width: 100vw;
+    max-height: 100vh;
   }
 }
 
