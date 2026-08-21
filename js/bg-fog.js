@@ -1,10 +1,6 @@
 (() => {
   const ENABLE_FOG = true
   const FOG_OPACITY = 0.14
-  const PARALLAX = 14
-  const SPEED = 0.14
-  const FPS_LIMIT = 30
-  const DISABLE_ON_MOBILE = true
   const BLEND_MODE = 'screen'
 
   const BLUE = [170, 190, 255, 0.09]
@@ -28,8 +24,8 @@
   let tx = 0
   let ty = 0
 
-  // 手机端直接关闭动态雾，避免刷新页面时创建大尺寸 Canvas 和噪声纹理。
-  const isMobile = () => DISABLE_ON_MOBILE && (
+  // 粗指针/窄屏判定：手机不关闭效果，只降低画质与帧率。
+  const isMobile = () => (
     window.matchMedia('(pointer: coarse)').matches ||
     /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent) ||
     window.innerWidth < 768
@@ -38,9 +34,18 @@
   const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const lerp = (a, b, n) => a + (b - a) * n
 
-  const updateDpr = () => {
-    // 背景属于装饰层，不需要 2x DPR；限制到 1.25 可明显降低像素填充成本。
-    dpr = Math.max(1, Math.min(1.25, window.devicePixelRatio || 1))
+  const getQuality = () => {
+    const mobile = isMobile()
+    return {
+      mobile,
+      fps: mobile ? 14 : 30,
+      dpr: mobile ? 1 : Math.max(1, Math.min(1.25, window.devicePixelRatio || 1)),
+      textureSize: mobile ? 128 : 256,
+      grid: mobile ? 16 : 32,
+      speed: mobile ? 0.08 : 0.14,
+      parallax: mobile ? 0 : 14,
+      secondLayer: !mobile
+    }
   }
 
   const createCanvas = () => {
@@ -64,18 +69,21 @@
     const nextWidth = Math.floor(window.innerWidth)
     const nextHeight = Math.floor(window.innerHeight)
 
-    // 移动浏览器地址栏收缩会频繁触发 resize；尺寸变化很小时不重建纹理。
+    // 手机浏览器地址栏变化会连续触发 resize；小幅变化不重建 Canvas。
     if (!force && Math.abs(nextWidth - width) < 24 && Math.abs(nextHeight - height) < 80) return
 
     width = nextWidth
     height = nextHeight
-    updateDpr()
+    const quality = getQuality()
+    dpr = quality.dpr
     canvas.width = Math.floor(width * dpr)
     canvas.height = Math.floor(height * dpr)
     canvas.style.width = width + 'px'
     canvas.style.height = height + 'px'
 
-    if (!tex) buildTexture()
+    // 桌面/手机画质级别切换时才重建纹理，普通 resize 复用纹理。
+    const requiredSize = quality.textureSize
+    if (!tex || tex.width !== requiredSize) buildTexture(requiredSize, quality.grid)
     pat = ctx.createPattern(tex, 'repeat')
   }
 
@@ -86,10 +94,7 @@
 
   const rnd = (seed => () => (seed = (seed * 9301 + 49297) % 233280) / 233280)(137)
 
-  const buildTexture = () => {
-    // 纹理由 512 降到 256，并且整个页面生命周期只创建一次。
-    const size = 256
-    const grid = 32
+  const buildTexture = (size, grid) => {
     const off = document.createElement('canvas')
     off.width = size
     off.height = size
@@ -140,20 +145,22 @@
   const draw = now => {
     if (!running || !ctx || !canvas) return
 
-    const minDelta = 1000 / FPS_LIMIT
+    const quality = getQuality()
+    const minDelta = 1000 / quality.fps
     if (lastFrame && now - lastFrame < minDelta) {
       rafId = requestAnimationFrame(draw)
       return
     }
 
     lastFrame = now
-    t += SPEED
+    t += quality.speed
     tx = lerp(tx, mx, 0.08)
     ty = lerp(ty, my, 0.08)
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     ctx.clearRect(0, 0, width, height)
 
+    // 第一层雾始终保留，手机也能看到动态背景。
     ctx.save()
     ctx.translate(tx + t * 5, ty + t * 3)
     ctx.fillStyle = pat
@@ -161,25 +168,30 @@
     tint(BLUE)
     ctx.restore()
 
-    ctx.save()
-    ctx.translate(-tx * 0.6 - t * 4, -ty * 0.6 - t * 2)
-    ctx.fillStyle = pat
-    ctx.fillRect(-width, -height, width * 3, height * 3)
-    tint(WINE)
-    ctx.restore()
+    // 第二层只在桌面开启，手机减少一半大面积像素填充。
+    if (quality.secondLayer) {
+      ctx.save()
+      ctx.translate(-tx * 0.6 - t * 4, -ty * 0.6 - t * 2)
+      ctx.fillStyle = pat
+      ctx.fillRect(-width, -height, width * 3, height * 3)
+      tint(WINE)
+      ctx.restore()
+    }
 
     rafId = requestAnimationFrame(draw)
   }
 
   const onMouseMove = e => {
+    const quality = getQuality()
+    if (!quality.parallax) return
     const x = e.clientX - width / 2
     const y = e.clientY - height / 2
-    mx = Math.max(-PARALLAX, Math.min(PARALLAX, (x / Math.max(1, width)) * PARALLAX))
-    my = Math.max(-PARALLAX, Math.min(PARALLAX, (y / Math.max(1, height)) * PARALLAX))
+    mx = Math.max(-quality.parallax, Math.min(quality.parallax, (x / Math.max(1, width)) * quality.parallax))
+    my = Math.max(-quality.parallax, Math.min(quality.parallax, (y / Math.max(1, height)) * quality.parallax))
   }
 
   const onVisibility = () => {
-    running = !document.hidden && !isMobile() && !prefersReduced()
+    running = !document.hidden && !prefersReduced()
     if (running && !rafId) rafId = requestAnimationFrame(draw)
   }
 
@@ -199,12 +211,12 @@
   }
 
   const init = () => {
-    if (!ENABLE_FOG || prefersReduced() || isMobile()) {
+    if (!ENABLE_FOG || prefersReduced()) {
       destroy()
       return
     }
 
-    // DOMContentLoaded 与 load 都可能触发；已有实例时不重复创建和重建纹理。
+    // DOMContentLoaded 与 load 都可能触发，已有实例时不重复初始化。
     if (initialized && document.getElementById('bg-fog')) return
 
     destroy()
