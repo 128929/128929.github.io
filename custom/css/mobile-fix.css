@@ -1,0 +1,61 @@
+/* Mobile layout fix - generated for TuTu Blog */
+
+@media screen and (max-width:768px){
+  html,body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden!important;
+  }
+
+  .layout,
+  #content-inner.layout,
+  #content-outer.layout,
+  #main,
+  #post,
+  #page{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+
+  #article-container,
+  .article-content{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    padding:16px!important;
+    box-sizing:border-box!important;
+  }
+
+  #article-container,
+  #article-container p,
+  #article-container h1,
+  #article-container h2,
+  #article-container h3,
+  #article-container li,
+  #article-container a{
+    word-break:normal!important;
+    overflow-wrap:break-word!important;
+    white-space:normal!important;
+  }
+
+  #article-container h1{
+    font-size:1.8rem!important;
+    line-height:1.45!important;
+  }
+
+  #article-container p{
+    font-size:16px!important;
+    line-height:1.8!important;
+  }
+
+  #aside-content{
+    display:none!important;
+  }
+
+  #rightside{
+    right:12px!important;
+    bottom:20px!important;
+  }
+}
