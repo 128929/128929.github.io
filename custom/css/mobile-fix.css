@@ -1,61 +1,106 @@
-/* Mobile layout fix - generated for TuTu Blog */
+/* Mobile layout fix - TuTu Blog */
 
 @media screen and (max-width:768px){
-  html,body{
-    width:100%;
-    max-width:100%;
-    overflow-x:hidden!important;
-  }
 
-  .layout,
-  #content-inner.layout,
-  #content-outer.layout,
-  #main,
-  #post,
-  #page{
-    display:block!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-  }
+html,body{
+ width:100%;
+ max-width:100%;
+ overflow-x:hidden!important;
+}
 
-  #article-container,
-  .article-content{
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    padding:16px!important;
-    box-sizing:border-box!important;
-  }
+.layout,
+#content-inner.layout,
+#content-outer.layout,
+#main,
+#post,
+#page{
+ display:block!important;
+ width:100%!important;
+ max-width:100%!important;
+ min-width:0!important;
+}
 
-  #article-container,
-  #article-container p,
-  #article-container h1,
-  #article-container h2,
-  #article-container h3,
-  #article-container li,
-  #article-container a{
-    word-break:normal!important;
-    overflow-wrap:break-word!important;
-    white-space:normal!important;
-  }
+#article-container,
+.article-content{
+ width:100%!important;
+ max-width:100%!important;
+ min-width:0!important;
+ padding:16px!important;
+ box-sizing:border-box!important;
+}
 
-  #article-container h1{
-    font-size:1.8rem!important;
-    line-height:1.45!important;
-  }
+#article-container,
+#article-container p,
+#article-container h1,
+#article-container h2,
+#article-container h3,
+#article-container li,
+#article-container a{
+ word-break:normal!important;
+ overflow-wrap:break-word!important;
+ white-space:normal!important;
+}
 
-  #article-container p{
-    font-size:16px!important;
-    line-height:1.8!important;
-  }
+#article-container h1{
+ font-size:1.8rem!important;
+ line-height:1.45!important;
+}
 
-  #aside-content{
-    display:none!important;
-  }
+#article-container p{
+ font-size:16px!important;
+ line-height:1.8!important;
+}
 
-  #rightside{
-    right:12px!important;
-    bottom:20px!important;
-  }
+#aside-content{
+ display:none!important;
+}
+
+#rightside{
+ right:12px!important;
+ bottom:20px!important;
+}
+
+/* 手机侧边菜单优化 */
+#sidebar-menus{
+ width:86vw!important;
+ max-width:330px!important;
+ background:rgba(15,23,42,.96)!important;
+ backdrop-filter:blur(12px)!important;
+ -webkit-backdrop-filter:blur(12px)!important;
+ border-radius:0 18px 18px 0!important;
+ box-shadow:0 10px 35px rgba(0,0,0,.35)!important;
+}
+
+#sidebar-menus .site-page,
+#sidebar-menus .site-page span{
+ color:#e5e7eb!important;
+}
+
+#sidebar-menus .menus_item_child{
+ background:rgba(30,41,59,.92)!important;
+ border-radius:12px!important;
+ margin:8px 12px!important;
+ padding:8px!important;
+}
+
+#sidebar-menus .menus_item_child a,
+#sidebar-menus .menus_item_child span{
+ color:#f8fafc!important;
+}
+
+#sidebar-menus .menus_item_child a:hover{
+ background:rgba(59,130,246,.25)!important;
+ border-radius:8px!important;
+}
+
+/* 修复浅色主题菜单文字发白 */
+[data-theme='light'] #sidebar-menus{
+ background:rgba(255,255,255,.96)!important;
+}
+
+[data-theme='light'] #sidebar-menus .site-page,
+[data-theme='light'] #sidebar-menus .site-page span{
+ color:#334155!important;
+}
+
 }
