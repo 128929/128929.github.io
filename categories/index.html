@@ -1,349 +1,144 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>分类 | Tutu's Blog</title><meta name="author" content="tutu"><meta name="copyright" content="tutu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="这里是Tutu的技术博客，分享Web开发、云计算及各种折腾笔记">
-<meta property="og:type" content="website">
-<meta property="og:title" content="分类">
-<meta property="og:url" content="https://128929.github.io/categories/index.html">
-<meta property="og:site_name" content="Tutu&#39;s Blog">
-<meta property="og:description" content="这里是Tutu的技术博客，分享Web开发、云计算及各种折腾笔记">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://128929.github.io/img/butterfly-icon.png">
-<meta property="article:published_time" content="2025-08-23T12:16:16.000Z">
-<meta property="article:modified_time" content="2025-08-23T13:11:55.852Z">
-<meta property="article:author" content="tutu">
-<meta property="article:tag" content="博客,技术,Web,Cloud,Linux">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://128929.github.io/img/butterfly-icon.png"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://128929.github.io/categories/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#a29bfe"/><link rel="apple-touch-icon" sizes="180x180" href="/img/butterfly-icon.png"/><link rel="mask-icon" href="/img/butterfly-icon.png" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return value
-      }
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>分类 | Tutu's Blog</title>
+  <meta name="author" content="tutu">
+  <meta name="description" content="Tutu's Blog 技术分类导航：机器人、强化学习、URDF/机器人可视化工具与技术教程。">
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    :root{
+      --bg:#07101f;
+      --bg2:#0b1730;
+      --panel:rgba(13,27,52,.88);
+      --panel-hover:rgba(18,38,70,.96);
+      --text:#edf5ff;
+      --muted:#9fb0c7;
+      --border:rgba(96,165,250,.17);
+      --blue:#60a5fa;
+      --cyan:#38bdf8;
+      --violet:#a78bfa;
+      --green:#34d399;
+      --shadow:0 24px 70px rgba(0,0,0,.28);
     }
-
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!false && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%,rgba(37,99,235,.22),transparent 30%),
+        radial-gradient(circle at 88% 12%,rgba(124,58,237,.16),transparent 28%),
+        linear-gradient(180deg,var(--bg2) 0%,var(--bg) 72%);
     }
-  
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
-
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
-
-      const theme = saveToLocal.get('theme')
-    
-          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
-          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
-
-          if (theme === undefined) {
-            if (mediaQueryLight.matches) activateLightMode()
-            else if (mediaQueryDark.matches) activateDarkMode()
-            else {
-              const hour = new Date().getHours()
-              const isNight = hour <= 22 || hour >= 6
-              isNight ? activateDarkMode() : activateLightMode()
-            }
-            mediaQueryDark.addEventListener('change', () => {
-              if (saveToLocal.get('theme') === undefined) {
-                e.matches ? activateDarkMode() : activateLightMode()
-              }
-            })
-          } else {
-            theme === 'light' ? activateLightMode() : activateDarkMode()
-          }
-        
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
-    
-      
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
+    body::before{
+      content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
+      background-image:
+        linear-gradient(rgba(96,165,250,.08) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(96,165,250,.08) 1px,transparent 1px);
+      background-size:44px 44px;
+      mask-image:linear-gradient(to bottom,black,transparent 88%);
     }
-    detectApple()
-  
-    })()
-  </script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
-  copy: {
-    success: '复制成功',
-    error: '复制失败',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '天',
-  dateSuffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: undefined,
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
-    buttonText: '加载更多'
-  },
-  isPhotoFigcaption: false,
-  islazyloadPlugin: true,
-  isAnchor: false,
-  percent: {
-    toc: true,
-    rightside: true,
-  },
-  autoDarkmode: true
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: '分类',
-  isHighlightShrink: true,
-  isToc: false,
-  pageType: 'page'
-}</script><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="/custom/css/code-theme.css"><link rel="stylesheet" href="/custom/css/responsive.css"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Tutu's Blog" type="application/atom+xml">
-</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
-  const $loadingBox = document.getElementById('loading-box')
-  const $body = document.body
-  const preloader = {
-    endLoading: () => {
-      if ($loadingBox.classList.contains('loaded')) return
-      $body.style.overflow = ''
-      $loadingBox.classList.add('loaded')
-    },
-    initLoading: () => {
-      $body.style.overflow = 'hidden'
-      $loadingBox.classList.remove('loaded')
+    .nav{
+      position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:15px max(18px,calc((100vw - 1120px)/2));
+      background:rgba(7,16,31,.84);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);
     }
-  }
+    .brand{display:flex;align-items:center;gap:10px;color:var(--text);font-size:18px;font-weight:800;text-decoration:none}
+    .brand img{width:34px;height:34px;border-radius:9px}
+    .nav-links{display:flex;gap:18px;align-items:center}.nav-links a{color:var(--muted);text-decoration:none;font-size:14px}.nav-links a:hover{color:var(--cyan)}
+    .wrap{position:relative;z-index:1;width:min(1120px,calc(100% - 32px));margin:48px auto 80px}
+    .hero{padding:38px clamp(22px,5vw,58px);border:1px solid var(--border);border-radius:26px;background:linear-gradient(135deg,rgba(37,99,235,.14),rgba(124,58,237,.08)),var(--panel);box-shadow:var(--shadow)}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(56,189,248,.11);color:var(--cyan);font-size:13px;font-weight:750}
+    h1{margin:17px 0 12px;font-size:clamp(34px,6vw,52px);line-height:1.15;letter-spacing:-.025em}
+    .hero p{max-width:820px;margin:0;color:var(--muted);font-size:17px;line-height:1.85}
+    .section-title{display:flex;align-items:center;gap:10px;margin:34px 0 16px;font-size:20px;font-weight:800}
+    .section-title i{color:var(--cyan)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .card{position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:260px;padding:25px;border:1px solid var(--border);border-radius:21px;background:var(--panel);box-shadow:var(--shadow);transition:.22s ease}
+    .card:hover{transform:translateY(-4px);background:var(--panel-hover);border-color:rgba(96,165,250,.36)}
+    .card.featured{grid-column:1/-1;min-height:300px;background:linear-gradient(135deg,rgba(37,99,235,.18),rgba(56,189,248,.06)),var(--panel)}
+    .card.featured::after{content:"URDF";position:absolute;right:-10px;bottom:-26px;font-size:110px;font-weight:900;color:rgba(96,165,250,.045);letter-spacing:-.08em}
+    .icon{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;background:rgba(96,165,250,.12);color:var(--blue);font-size:21px;margin-bottom:17px}
+    .featured .icon{background:rgba(56,189,248,.12);color:var(--cyan)}
+    .card h2{margin:0 0 10px;font-size:23px}.card p{margin:0;color:var(--muted);line-height:1.75;font-size:15px;max-width:820px}
+    .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}.tag{padding:6px 9px;border-radius:9px;background:rgba(167,139,250,.10);color:#c4b5fd;font-size:12px;font-weight:700}
+    .tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-top:20px}
+    .tool{padding:13px;border:1px solid rgba(96,165,250,.13);border-radius:13px;background:rgba(255,255,255,.025)}
+    .tool strong{display:block;margin-bottom:4px;font-size:14px}.tool span{color:var(--muted);font-size:12px;line-height:1.5}
+    .go{display:inline-flex;align-items:center;gap:8px;width:max-content;margin-top:auto;padding-top:22px;color:var(--cyan);font-weight:750;text-decoration:none;font-size:14px}.go:hover{gap:12px}
+    .count{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;margin-left:6px;padding:0 8px;border-radius:999px;background:rgba(52,211,153,.10);color:var(--green);font-size:12px;font-weight:800}
+    .footer{margin-top:34px;text-align:center;color:var(--muted);font-size:13px;line-height:1.8}
+    @media(max-width:780px){.nav-links a:nth-child(n+4){display:none}.wrap{margin-top:24px}.grid{grid-template-columns:1fr}.card.featured{grid-column:auto}.tools{grid-template-columns:1fr}.hero{padding:28px 22px}.card{min-height:auto}.nav{padding:12px 15px}}
+    @media(max-width:480px){.nav-links{gap:12px}.nav-links a:nth-child(n+3){display:none}.wrap{width:calc(100% - 18px)}h1{font-size:35px}.hero p{font-size:15px}.card{padding:20px;border-radius:17px}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="/"><img src="/img/butterfly-icon.png" alt="logo"><span>Tutu's Blog</span></a>
+    <div class="nav-links"><a href="/">首页</a><a href="/archives/">归档</a><a href="/categories/">分类</a><a href="/project">项目</a><a href="/about/">关于</a></div>
+  </nav>
 
-  preloader.initLoading()
+  <main class="wrap">
+    <section class="hero">
+      <span class="hero-badge"><i class="fas fa-layer-group"></i> Knowledge Categories</span>
+      <h1>技术分类</h1>
+      <p>把机器人研发、仿真、嵌入式和工具资料按主题沉淀。这里优先放真正会反复使用的工程资源，减少零散链接到处找的问题。</p>
+    </section>
 
-  if (document.readyState === 'complete') {
-    preloader.endLoading()
-  } else {
-    window.addEventListener('load', preloader.endLoading)
-    document.addEventListener('DOMContentLoaded', preloader.endLoading)
-    // Add timeout protection: force end after 7 seconds
-    setTimeout(preloader.endLoading, 7000)
-  }
+    <div class="section-title"><i class="fas fa-robot"></i><span>机器人与工程工具</span></div>
+    <section class="grid">
+      <article class="card featured">
+        <div class="icon"><i class="fas fa-cube"></i></div>
+        <h2>机器人可视化 / URDF 工具 <span class="count">3</span></h2>
+        <p>集中整理网页端机器人模型查看、URDF/MJCF 可视化、关节控制以及 Three.js URDF 加载方案。后续做机器人手、机械臂、四足模型网页上位机时可以直接从这里选型。</p>
+        <div class="tools">
+          <div class="tool"><strong>Robot Viewer</strong><span>URDF / Xacro / MJCF / USD，结构树与关节控制</span></div>
+          <div class="tool"><strong>ERMINE Robot Viewer</strong><span>增强版 Viewer，增加测量、控制和 IK 等功能</span></div>
+          <div class="tool"><strong>urdf-loaders</strong><span>Three.js 底层 URDF 加载库，适合二次开发</span></div>
+        </div>
+        <div class="tags"><span class="tag">URDF</span><span class="tag">Three.js</span><span class="tag">Robot Viewer</span><span class="tag">MJCF</span></div>
+        <a class="go" href="/categories/robot-visualization-tools/">打开这个分类 <i class="fas fa-arrow-right"></i></a>
+      </article>
 
-  if (false) {
-    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
-    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
-  }
-})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "/img/loading.gif" data-lazy-src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/timeline/"><i class="fa-fw fas fa-history"></i><span> 时间轴</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/project"><i class="fa-fw iconfont icon-project"></i><span> 项目</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/search/"><i class="fa-fw fas fa-search"></i><span> 搜索</span></a></div></div></div></div><div class="page type-categories" id="body-wrap"><header class="not-home-page fixed" id="page-header" style="background-image: url(/img/butterfly-cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src= "/img/loading.gif" data-lazy-src="/img/butterfly-icon.png" alt="Logo"><span class="site-name">Tutu's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/timeline/"><i class="fa-fw fas fa-history"></i><span> 时间轴</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/project"><i class="fa-fw iconfont icon-project"></i><span> 项目</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/search/"><i class="fa-fw fas fa-search"></i><span> 搜索</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title">分类</h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="category-lists"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo%E6%95%99%E7%A8%8B/">Hexo教程</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo%E6%95%99%E7%A8%8B/%E4%B8%BB%E9%A2%98/">主题</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%99%E7%A8%8B/">教程</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%99%E7%A8%8B/Butterfly%E4%B8%BB%E9%A2%98/">Butterfly主题</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%99%E7%A8%8B/Hexo/">Hexo</a><span class="category-list-count">1</span></li></ul></li></ul></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="artalk-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "/img/loading.gif" data-lazy-src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">tutu</div><div class="author-info-description">这是一个使用Butterfly主题的博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:example@example.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://weibo.com/" target="_blank" title="微博"><i class="fab fa-weibo" style="color: #e6162d;"></i></a><a class="social-icon" href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter" style="color: #1DA1F2;"></i></a><a class="social-icon" href="https://codepen.io/" target="_blank" title="CodePen"><i class="fab fa-codepen" style="color: #000000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里记录了我的学习和生活。</div></div><div class="card-widget card-custom"><div class="item-headline"><i class="fas fa-star"></i><span>自定义组件</span></div><div class="custom-content"><p>这里添加你的自定义内容</p><ul><li><a href="/project">项目展示</a></li><li><a href="/about">关于我</a></li></ul><p>欢迎访问我的博客！</p></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/d85c4342/" title="Butterfly主题标签外挂功能演示"><img src= "/img/loading.gif" data-lazy-src="/img/placeholder.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Butterfly主题标签外挂功能演示"/></a><div class="content"><a class="title" href="/posts/d85c4342/" title="Butterfly主题标签外挂功能演示">Butterfly主题标签外挂功能演示</a><time datetime="2025-08-24T07:00:00.000Z" title="发表于 2025-08-24 15:00:00">2025-08-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/f0d8e1c0/" title="Butterfly主题功能演示"><img src= "/img/loading.gif" data-lazy-src="/img/butterfly-cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Butterfly主题功能演示"/></a><div class="content"><a class="title" href="/posts/f0d8e1c0/" title="Butterfly主题功能演示">Butterfly主题功能演示</a><time datetime="2025-08-24T04:00:00.000Z" title="发表于 2025-08-24 12:00:00">2025-08-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/68534d0c/" title="Butterfly主题使用文档"><img src= "/img/loading.gif" data-lazy-src="/img/placeholder.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Butterfly主题使用文档"/></a><div class="content"><a class="title" href="/posts/68534d0c/" title="Butterfly主题使用文档">Butterfly主题使用文档</a><time datetime="2025-08-23T18:37:25.000Z" title="发表于 2025-08-24 02:37:25">2025-08-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/5c2fafc7/" title="第一篇文章"><img src= "/img/loading.gif" data-lazy-src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第一篇文章"/></a><div class="content"><a class="title" href="/posts/5c2fafc7/" title="第一篇文章">第一篇文章</a><time datetime="2025-08-23T09:40:31.000Z" title="发表于 2025-08-23 17:40:31">2025-08-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/4a17b156/" title="Hello World"><img src= "/img/loading.gif" data-lazy-src="/img/404.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/posts/4a17b156/" title="Hello World">Hello World</a><time datetime="2025-08-23T09:00:00.000Z" title="发表于 2025-08-23 17:00:00">2025-08-23</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
-            <i class="fas fa-folder-open"></i>
-            <span>分类</span>
-            
-          </div>
-          <ul class="card-category-list" id="aside-cat-list">
-            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Hexo%E6%95%99%E7%A8%8B/"><span class="card-category-list-name">Hexo教程</span><span class="card-category-list-count">2</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Hexo%E6%95%99%E7%A8%8B/%E4%B8%BB%E9%A2%98/"><span class="card-category-list-name">主题</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%99%E7%A8%8B/"><span class="card-category-list-name">教程</span><span class="card-category-list-count">3</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%99%E7%A8%8B/Butterfly%E4%B8%BB%E9%A2%98/"><span class="card-category-list-name">Butterfly主题</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%99%E7%A8%8B/Hexo/"><span class="card-category-list-name">Hexo</span><span class="card-category-list-count">1</span></a></li></ul></li>
-          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Hexo/" style="font-size: 1.45em; color: rgb(50, 98, 67);">Hexo</a><a href="/tags/Butterfly/" style="font-size: 1.45em; color: rgb(198, 76, 50);">Butterfly</a><a href="/tags/%E4%B8%BB%E9%A2%98/" style="font-size: 1.3em; color: rgb(50, 173, 50);">主题</a><a href="/tags/%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA/" style="font-size: 1.3em; color: rgb(90, 193, 50);">功能演示</a><a href="/tags/%E5%85%A5%E9%97%A8/" style="font-size: 1.15em; color: rgb(92, 50, 199);">入门</a><a href="/tags/%E6%A0%87%E7%AD%BE%E5%A4%96%E6%8C%82/" style="font-size: 1.15em; color: rgb(50, 191, 59);">标签外挂</a><a href="/tags/%E7%A4%BA%E4%BE%8B/" style="font-size: 1.15em; color: rgb(50, 180, 155);">示例</a><a href="/tags/%E5%8D%9A%E5%AE%A2/" style="font-size: 1.15em; color: rgb(191, 50, 78);">博客</a></div></div><div class="card-widget card-archives">
-    <div class="item-headline">
-      <i class="fas fa-archive"></i>
-      <span>归档</span>
-      
-    </div>
-  
-    <ul class="card-archive-list">
-      
-        <li class="card-archive-list-item">
-          <a class="card-archive-list-link" href="/archives/2025/08/">
-            <span class="card-archive-list-date">
-              2025年08月
-            </span>
-            <span class="card-archive-list-count">5</span>
-          </a>
-        </li>
-      
-    </ul>
-  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">5</div></div><div class="webinfo-item"><div class="item-name">运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2024-12-31T16:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-08-23T18:53:46.462Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: [object Object];"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By tutu</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.3</a></span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">备案号：XXXXXXXX</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
-  const runMermaid = ele => {
-    window.loadMermaid = true
-    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+      <article class="card">
+        <div class="icon"><i class="fas fa-brain"></i></div>
+        <h2>机器人 / 强化学习</h2>
+        <p>运动控制、奖励函数、四足机器人训练、课程学习、Domain Randomization 与 Sim2Real 的知识沉淀。</p>
+        <div class="tags"><span class="tag">RL</span><span class="tag">Locomotion</span><span class="tag">Sim2Real</span></div>
+        <a class="go" href="/posts/reinforcement-learning-robot-control/">查看强化学习文章 <i class="fas fa-arrow-right"></i></a>
+      </article>
 
-    ele.forEach((item, index) => {
-      const mermaidSrc = item.firstElementChild
-      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
-      const mermaidID = `mermaid-${index}`
-      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+      <article class="card">
+        <div class="icon"><i class="fas fa-microchip"></i></div>
+        <h2>嵌入式 / 通信</h2>
+        <p>MCU、CAN、RS485、SPI、机器人通信架构和硬件调试相关内容，后续会持续把工程经验整理到这里。</p>
+        <div class="tags"><span class="tag">MCU</span><span class="tag">CAN</span><span class="tag">RS485</span></div>
+        <a class="go" href="/archives/">浏览现有文章 <i class="fas fa-arrow-right"></i></a>
+      </article>
+    </section>
 
-      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
-      const renderMermaid = svg => {
-        mermaidSrc.insertAdjacentHTML('afterend', svg)
-      }
+    <div class="section-title"><i class="fas fa-book"></i><span>原有博客分类</span></div>
+    <section class="grid">
+      <article class="card">
+        <div class="icon"><i class="fas fa-code"></i></div>
+        <h2>Hexo 教程 <span class="count">2</span></h2>
+        <p>Hexo 与 Butterfly 主题相关的原有教程内容。</p>
+        <a class="go" href="/categories/Hexo%E6%95%99%E7%A8%8B/">进入分类 <i class="fas fa-arrow-right"></i></a>
+      </article>
+      <article class="card">
+        <div class="icon"><i class="fas fa-book-open"></i></div>
+        <h2>教程 <span class="count">3</span></h2>
+        <p>博客中已有的综合教程、主题功能与基础示例。</p>
+        <a class="go" href="/categories/%E6%95%99%E7%A8%8B/">进入分类 <i class="fas fa-arrow-right"></i></a>
+      </article>
+    </section>
 
-      // mermaid v9 and v10 compatibility
-      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
-    })
-  }
-
-  const codeToMermaid = () => {
-    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
-    if (codeMermaidEle.length === 0) return
-
-    codeMermaidEle.forEach(ele => {
-      const preEle = document.createElement('pre')
-      preEle.className = 'mermaid-src'
-      preEle.hidden = true
-      preEle.textContent = ele.textContent
-      const newEle = document.createElement('div')
-      newEle.className = 'mermaid-wrap'
-      newEle.appendChild(preEle)
-      ele.parentNode.replaceWith(newEle)
-    })
-  }
-
-  const loadMermaid = () => {
-    if (false) codeToMermaid()
-    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
-    if ($mermaid.length === 0) return
-
-    const runMermaidFn = () => runMermaid($mermaid)
-    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
-    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
-  }
-
-  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
-  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
-})()</script><script>(() => {
-  let artalkItem = null
-  const option = null
-  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
-
-  const destroyArtalk = () => {
-    if (artalkItem) {
-      artalkItem.destroy()
-      artalkItem = null
-    }
-  }
-
-  const artalkChangeMode = theme => artalkItem && artalkItem.setDarkMode(theme === 'dark')
-
-  const initArtalk = (el = document, pageKey = location.pathname) => {
-    const server = (option && option.server) || window.ARTALK_SERVER || ''
-    const site = (option && option.site) || window.ARTALK_SITE || ''
-    if (!server || !site) {
-      const wrap = el.querySelector('#artalk-wrap')
-      if (wrap) {
-        wrap.innerHTML = '<div class="no-comment-tip">评论系统未配置</div>'
-        wrap.classList.add('no-comment')
-      }
-      return
-    }
-    artalkItem = Artalk.init({
-      el: el.querySelector('#artalk-wrap'),
-      server,
-      site,
-      darkMode: document.documentElement.getAttribute('data-theme') === 'dark',
-      ...option,
-      pageKey: isShuoshuo ? pageKey : (option && option.pageKey) || pageKey
-    })
-
-    if (GLOBAL_CONFIG.lightbox === 'null') return
-    artalkItem.on('list-loaded', () => {
-      artalkItem.ctx.get('list').getCommentNodes().forEach(comment => {
-        const $content = comment.getRender().$content
-        btf.loadLightbox($content.querySelectorAll('img:not([atk-emoticon])'))
-      })
-    })
-
-    if (isShuoshuo) {
-      window.shuoshuoComment.destroyArtalk = () => {
-        destroyArtalk()
-        if (el.children.length) {
-          el.innerHTML = ''
-          el.classList.add('no-comment')
-        }
-      }
-    }
-
-    btf.addGlobalFn('pjaxSendOnce', destroyArtalk, 'destroyArtalk')
-    btf.addGlobalFn('themeChange', artalkChangeMode, 'artalk')
-  }
-
-  const loadArtalk = async (el, pageKey) => {
-    if (typeof Artalk === 'object') initArtalk(el, pageKey)
-    else {
-      await btf.getCSS('https://cdn.jsdelivr.net/npm/artalk/dist/Artalk.min.css')
-      await btf.getScript('https://cdn.jsdelivr.net/npm/artalk/dist/Artalk.min.js')
-      initArtalk(el, pageKey)
-    }
-  }
-
-  if (isShuoshuo) {
-    'Artalk' === 'Artalk'
-      ? window.shuoshuoComment = { loadComment: loadArtalk }
-      : window.loadOtherComment = loadArtalk
-    return
-  }
-
-  if ('Artalk' === 'Artalk' || !false) {
-    if (false) btf.loadComment(document.getElementById('artalk-wrap'), loadArtalk)
-    else setTimeout(loadArtalk, 100)
-  } else {
-    window.loadOtherComment = loadArtalk
-  }
-})()</script></div><script src="/custom/js/aplayer-init.js"></script><script src="/js/custom.js"></script><script>console.log('Hexo Butterfly Theme loaded successfully!')</script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script></div></body></html>
+    <div class="footer">Tutu Robotics Knowledge Base · 分类页已改为直接静态展示，不再依赖前端脚本临时注入。</div>
+  </main>
+</body>
+</html>
