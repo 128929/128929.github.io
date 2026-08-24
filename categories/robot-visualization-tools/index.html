@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>机器人可视化 / URDF 工具 | Tutu's Blog</title>
+  <meta name="author" content="tutu">
+  <meta name="description" content="机器人模型查看、URDF/MJCF 可视化与 Three.js 加载工具分类整理。">
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  <link rel="stylesheet" href="/custom/css/responsive.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    :root{
+      --tool-bg:#f6f9ff;
+      --tool-card:rgba(255,255,255,.92);
+      --tool-card-strong:#ffffff;
+      --tool-text:#172033;
+      --tool-muted:#667085;
+      --tool-border:rgba(38,71,120,.12);
+      --tool-accent:#2563eb;
+      --tool-accent2:#7c3aed;
+      --tool-shadow:0 18px 48px rgba(38,71,120,.10);
+    }
+    [data-theme="dark"]{
+      --tool-bg:#07101f;
+      --tool-card:rgba(12,25,47,.92);
+      --tool-card-strong:#101d34;
+      --tool-text:#edf5ff;
+      --tool-muted:#9fb0c7;
+      --tool-border:rgba(100,181,246,.16);
+      --tool-accent:#60a5fa;
+      --tool-accent2:#a78bfa;
+      --tool-shadow:0 20px 60px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--tool-text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%,rgba(37,99,235,.12),transparent 32%),
+        radial-gradient(circle at 88% 18%,rgba(124,58,237,.09),transparent 30%),
+        linear-gradient(180deg,#f7fbff 0%,#eef5ff 100%);
+    }
+    [data-theme="dark"] body{
+      background:
+        radial-gradient(circle at 12% 8%,rgba(37,99,235,.18),transparent 30%),
+        radial-gradient(circle at 90% 14%,rgba(124,58,237,.14),transparent 28%),
+        linear-gradient(180deg,#08111f 0%,#0b1730 52%,#07101f 100%);
+    }
+    .tool-nav{
+      position:sticky;top:0;z-index:20;
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:14px max(18px,calc((100vw - 1120px)/2));
+      background:rgba(255,255,255,.82);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--tool-border);
+    }
+    [data-theme="dark"] .tool-nav{background:rgba(7,16,31,.86)}
+    .tool-brand{font-weight:800;color:var(--tool-text);text-decoration:none}.tool-nav-links{display:flex;gap:16px}.tool-nav-links a{color:var(--tool-muted);text-decoration:none;font-size:14px}.tool-nav-links a:hover{color:var(--tool-accent)}
+    .tool-wrap{width:min(1120px,calc(100% - 32px));margin:38px auto 72px}
+    .hero{
+      padding:34px clamp(22px,5vw,56px);
+      background:linear-gradient(135deg,rgba(37,99,235,.10),rgba(124,58,237,.08)),var(--tool-card);
+      border:1px solid var(--tool-border);border-radius:24px;box-shadow:var(--tool-shadow);
+    }
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:rgba(37,99,235,.10);color:var(--tool-accent);font-size:13px;font-weight:750}
+    h1{margin:16px 0 12px;font-size:clamp(30px,5vw,46px);line-height:1.18}.hero p{margin:0;color:var(--tool-muted);font-size:17px;line-height:1.85;max-width:850px}
+    .summary{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}.summary span{padding:7px 10px;border-radius:10px;background:rgba(124,58,237,.08);color:var(--tool-accent2);font-size:13px;font-weight:700}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
+    .tool-card{
+      display:flex;flex-direction:column;min-height:330px;padding:24px;
+      background:var(--tool-card);border:1px solid var(--tool-border);border-radius:20px;box-shadow:var(--tool-shadow);
+      transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+    }
+    .tool-card:hover{transform:translateY(-4px);border-color:rgba(96,165,250,.36);box-shadow:0 24px 60px rgba(20,40,80,.16)}
+    .rank{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.rank-number{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,var(--tool-accent),var(--tool-accent2));color:white;font-weight:850}.tag{padding:6px 9px;border-radius:999px;background:rgba(16,185,129,.10);color:#10b981;font-size:12px;font-weight:750}
+    .tool-card h2{margin:0 0 10px;font-size:22px}.tool-card p{margin:0 0 14px;color:var(--tool-muted);line-height:1.75;font-size:15px}.features{padding-left:18px;margin:0 0 20px;color:var(--tool-text);line-height:1.8;font-size:14px}.features li+li{margin-top:5px}
+    .tool-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border-radius:11px;text-decoration:none;font-size:14px;font-weight:750;border:1px solid var(--tool-border)}.btn.primary{background:linear-gradient(135deg,var(--tool-accent),var(--tool-accent2));color:#fff;border-color:transparent}.btn.secondary{color:var(--tool-text);background:var(--tool-card-strong)}
+    .recommend{margin-top:22px;padding:22px 24px;border-radius:18px;background:var(--tool-card);border:1px solid var(--tool-border);box-shadow:var(--tool-shadow);line-height:1.8}.recommend strong{color:var(--tool-accent)}
+    .back{display:inline-flex;align-items:center;gap:8px;margin-top:26px;color:var(--tool-accent);text-decoration:none;font-weight:700}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.tool-card{min-height:0}.tool-nav-links a:nth-child(n+3){display:none}}
+    @media(max-width:600px){.tool-wrap{width:calc(100% - 18px);margin:14px auto 40px}.hero{padding:24px 18px;border-radius:17px}.hero p{font-size:15.5px}.tool-card{padding:19px;border-radius:16px}.tool-nav{padding:12px 14px}.tool-nav-links{gap:10px}.tool-nav-links a{font-size:13px}}
+  </style>
+  <script>
+    (function(){
+      try{
+        var saved=localStorage.getItem('theme');
+        if(saved){var v=JSON.parse(saved);if(v&&v.value)document.documentElement.setAttribute('data-theme',v.value)}
+      }catch(e){}
+    })();
+  </script>
+</head>
+<body>
+  <nav class="tool-nav">
+    <a class="tool-brand" href="/"><i class="fas fa-robot"></i>&nbsp; Tutu Robotics Lab</a>
+    <div class="tool-nav-links"><a href="/">首页</a><a href="/categories/">分类</a><a href="/project">项目</a><a href="/about/">关于</a></div>
+  </nav>
+
+  <main class="tool-wrap">
+    <section class="hero">
+      <span class="hero-badge"><i class="fas fa-cubes"></i> 机器人开发工具分类</span>
+      <h1>机器人可视化 / URDF 工具</h1>
+      <p>把网页端机器人模型查看、URDF / Xacro / MJCF 加载、关节控制以及后续真实机器人联动相关的开源项目集中到一个分类里，方便后续做星际光年手、灵巧手和机器人上位机时快速查找。</p>
+      <div class="summary"><span>URDF</span><span>MJCF</span><span>Three.js</span><span>Robot Viewer</span><span>关节控制</span><span>模型调试</span></div>
+    </section>
+
+    <section class="grid">
+      <article class="tool-card">
+        <div class="rank"><span class="rank-number">1</span><span class="tag">优先参考</span></div>
+        <h2>Robot Viewer</h2>
+        <p>网页端机器人模型查看器，功能完整，适合作为机器人上位机和 URDF 调试界面的基础工程。</p>
+        <ul class="features">
+          <li>支持 URDF / Xacro / MJCF / USD</li>
+          <li>关节控制、Visual / Collision</li>
+          <li>惯量、质心、坐标轴、结构树</li>
+          <li>基于 Three.js，适合二次开发</li>
+        </ul>
+        <div class="tool-actions">
+          <a class="btn primary" href="https://github.com/fan-ziqi/robot_viewer" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub 源码</a>
+        </div>
+      </article>
+
+      <article class="tool-card">
+        <div class="rank"><span class="rank-number">2</span><span class="tag">增强版</span></div>
+        <h2>ERMINE Robot Viewer</h2>
+        <p>Robot Viewer 的增强 fork，加入更多控制、测量和机器人信息能力，更接近“模型查看 + 真实机器人联动”的方向。</p>
+        <ul class="features">
+          <li>URDF 检查与模型调试</li>
+          <li>控制、测量、机器人信息</li>
+          <li>IK 等增强功能</li>
+          <li>适合参考真实机器人联动架构</li>
+        </ul>
+        <div class="tool-actions">
+          <a class="btn primary" href="https://github.com/GuillaumeMINGANT/ERMINE-Robot_Viewer" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub 源码</a>
+        </div>
+      </article>
+
+      <article class="tool-card">
+        <div class="rank"><span class="rank-number">3</span><span class="tag">底层组件</span></div>
+        <h2>urdf-loaders</h2>
+        <p>更底层的 URDF 加载库，适合自己设计网页 UI，同时复用成熟的 Three.js URDF 加载和关节控制能力。</p>
+        <ul class="features">
+          <li>Three.js / Unity URDF Loader</li>
+          <li>支持 package:// 路径映射</li>
+          <li>支持 joint angle 控制</li>
+          <li>适合自定义机器人网页上位机</li>
+        </ul>
+        <div class="tool-actions">
+          <a class="btn primary" href="https://github.com/gkjohnson/urdf-loaders" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub 源码</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="recommend">
+      <strong>使用建议：</strong>如果目标是尽快做出完整的机器人模型查看与控制界面，优先从 Robot Viewer 改；如果更关注 IK、测量和真实机器人联动，可以重点参考 ERMINE；如果准备完全自定义界面和交互，则把 urdf-loaders 当作底层加载组件更合适。
+    </section>
+
+    <a class="back" href="/categories/"><i class="fas fa-arrow-left"></i> 返回分类</a>
+  </main>
+</body>
+</html>
