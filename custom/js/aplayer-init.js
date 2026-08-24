@@ -67,8 +67,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  // 给“分类”页增加一个独立的机器人可视化工具分类。
+  // 由于当前网站是已经生成好的静态页面，这里采用前端补充方式，
+  // 避免为了一个工具分类重新生成整套 Hexo 输出。
+  const addRobotVisualizationCategory = () => {
+    const categoryHref = '/categories/robot-visualization-tools/';
+    const categoryName = '机器人可视化 / URDF 工具';
+    const categoryList = document.querySelector('.category-lists .category-list');
+
+    if (categoryList && !categoryList.querySelector(`a[href="${categoryHref}"]`)) {
+      const item = document.createElement('li');
+      item.className = 'category-list-item';
+      item.innerHTML = `
+        <a class="category-list-link" href="${categoryHref}">${categoryName}</a>
+        <span class="category-list-count">3</span>
+      `;
+      categoryList.prepend(item);
+    }
+
+    // 侧栏分类区也补充同一个入口，便于从文章页快速访问。
+    const asideCategoryList = document.querySelector('#aside-cat-list');
+    if (asideCategoryList && !asideCategoryList.querySelector(`a[href="${categoryHref}"]`)) {
+      const asideItem = document.createElement('li');
+      asideItem.className = 'card-category-list-item';
+      asideItem.innerHTML = `
+        <a class="card-category-list-link" href="${categoryHref}">
+          <span class="card-category-list-name">${categoryName}</span>
+          <span class="card-category-list-count">3</span>
+        </a>
+      `;
+      asideCategoryList.prepend(asideItem);
+    }
+
+    // 新增一个手工分类后，将静态生成页面中旧的分类数量同步 +1。
+    document.querySelectorAll('.site-data a[href="/categories/"] .length-num').forEach(el => {
+      const current = Number(el.textContent || 0);
+      if (current > 0 && current < 6) el.textContent = '6';
+    });
+  };
+
   // js/custom.js 同样会在 DOMContentLoaded 时整理首页文章，延后一个事件循环执行，
   // 确保本篇新文章最终位于首页最前面。
   setTimeout(addReinforcementArticle, 0);
   setTimeout(addReinforcementArticle, 300);
+  setTimeout(addRobotVisualizationCategory, 0);
+  setTimeout(addRobotVisualizationCategory, 300);
 });
