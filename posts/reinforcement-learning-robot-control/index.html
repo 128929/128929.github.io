@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>强化学习与机器人运动控制：从传统控制到四足机器人 Sim2Real | Tutu's Blog</title>
+  <meta name="author" content="tutu">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="从 PID、MPC、WBC 到强化学习、奖励函数、域随机化、课程学习与 Sim2Real，系统整理机器人运动控制技术路线与工程理解。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="强化学习与机器人运动控制：从传统控制到四足机器人 Sim2Real">
+  <meta property="og:url" content="https://128929.github.io/posts/reinforcement-learning-robot-control/">
+  <meta property="og:site_name" content="Tutu's Blog">
+  <meta property="og:description" content="机器人强化学习与运动控制技术知识沉淀：传统控制、深度强化学习、奖励函数、Sim2Real、课程学习与系统分层。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:image" content="https://128929.github.io/img/butterfly-icon.png">
+  <meta property="article:published_time" content="2026-08-24T00:00:00.000Z">
+  <meta property="article:author" content="tutu">
+  <meta property="article:tag" content="强化学习">
+  <meta property="article:tag" content="机器人">
+  <meta property="article:tag" content="运动控制">
+  <meta property="article:tag" content="Sim2Real">
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  <link rel="canonical" href="https://128929.github.io/posts/reinforcement-learning-robot-control/">
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  <link rel="stylesheet" href="/custom/css/responsive.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    :root{--kb-bg:rgba(255,255,255,.90);--kb-border:rgba(20,30,50,.10);--kb-text:#263238;--kb-muted:#667085;--kb-accent:#3b82f6;--kb-accent2:#7c3aed;--kb-code:#f5f7fb}
+    [data-theme="dark"]{--kb-bg:rgba(20,24,32,.88);--kb-border:rgba(255,255,255,.10);--kb-text:#edf2f7;--kb-muted:#a7b0c0;--kb-code:#111827}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--kb-text);background:linear-gradient(180deg,rgba(239,246,255,.72),rgba(248,250,252,.94)),url('/img/autumn-forest.png') center/cover fixed;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+    [data-theme="dark"] body{background:linear-gradient(180deg,rgba(8,15,28,.80),rgba(13,18,28,.96)),url('/img/autumn-forest.png') center/cover fixed}
+    .kb-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px max(18px,calc((100vw - 1180px)/2));background:rgba(255,255,255,.76);backdrop-filter:blur(16px);border-bottom:1px solid var(--kb-border)}
+    [data-theme="dark"] .kb-nav{background:rgba(12,16,24,.76)}
+    .kb-brand{font-weight:800;color:var(--kb-text);text-decoration:none;white-space:nowrap}.kb-links{display:flex;gap:12px;flex-wrap:wrap}.kb-links a{color:var(--kb-muted);text-decoration:none;font-size:14px}.kb-links a:hover{color:var(--kb-accent)}
+    .kb-page{width:min(1180px,calc(100% - 32px));margin:34px auto 70px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:26px;align-items:start}
+    .kb-card{background:var(--kb-bg);backdrop-filter:blur(18px);border:1px solid var(--kb-border);border-radius:22px;box-shadow:0 18px 60px rgba(15,23,42,.08)}
+    .kb-article{padding:clamp(22px,4vw,48px)}
+    .kb-eyebrow{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border-radius:999px;background:rgba(59,130,246,.10);color:var(--kb-accent);font-weight:700;font-size:13px}
+    h1{font-size:clamp(30px,5vw,48px);line-height:1.2;margin:18px 0 14px;letter-spacing:-.03em;word-break:normal;overflow-wrap:break-word}
+    .kb-lead{font-size:18px;line-height:1.9;color:var(--kb-muted);margin-bottom:20px}
+    .kb-meta{display:flex;gap:12px;flex-wrap:wrap;color:var(--kb-muted);font-size:14px;padding-bottom:24px;border-bottom:1px solid var(--kb-border)}
+    .kb-article h2{font-size:28px;margin:44px 0 16px;padding-top:4px;line-height:1.35}.kb-article h3{font-size:21px;margin:28px 0 12px}.kb-article p,.kb-article li{font-size:16.5px;line-height:1.95}.kb-article ul,.kb-article ol{padding-left:1.4em}.kb-article strong{font-weight:750}.kb-article a{color:var(--kb-accent)}
+    .callout{margin:20px 0;padding:18px 20px;border-left:4px solid var(--kb-accent);background:rgba(59,130,246,.08);border-radius:14px;line-height:1.85}.callout.warn{border-left-color:#f59e0b;background:rgba(245,158,11,.08)}.callout.good{border-left-color:#10b981;background:rgba(16,185,129,.08)}
+    .diagram{overflow-x:auto;white-space:pre;margin:18px 0;padding:18px;border-radius:16px;background:var(--kb-code);border:1px solid var(--kb-border);font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--kb-text)}
+    .table-wrap{overflow-x:auto;border:1px solid var(--kb-border);border-radius:16px;margin:18px 0}.kb-article table{border-collapse:collapse;width:100%;min-width:640px;background:rgba(255,255,255,.22)}.kb-article th,.kb-article td{padding:13px 14px;border-bottom:1px solid var(--kb-border);text-align:left;vertical-align:top}.kb-article th{font-size:14px;color:var(--kb-muted)}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.chip{padding:7px 10px;border-radius:10px;background:rgba(124,58,237,.08);color:var(--kb-accent2);font-size:13px;font-weight:700}
+    .kb-aside{position:sticky;top:82px;padding:20px}.kb-aside h3{margin:0 0 12px;font-size:16px}.kb-toc{display:grid;gap:5px}.kb-toc a{padding:7px 10px;border-radius:9px;color:var(--kb-muted);text-decoration:none;font-size:14px;line-height:1.45}.kb-toc a:hover{background:rgba(59,130,246,.08);color:var(--kb-accent)}
+    .back-home{display:inline-flex;align-items:center;gap:8px;margin-top:34px;padding:12px 16px;border-radius:12px;text-decoration:none;background:linear-gradient(135deg,var(--kb-accent),var(--kb-accent2));color:#fff!important;font-weight:700}
+    .footer-note{margin-top:36px;padding-top:22px;border-top:1px solid var(--kb-border);font-size:14px;color:var(--kb-muted);line-height:1.8}
+    @media(max-width:900px){.kb-page{grid-template-columns:1fr}.kb-aside{display:none}.kb-nav{padding:12px 16px}.kb-links a:nth-child(n+4){display:none}}
+    @media(max-width:600px){body{background-attachment:scroll}.kb-page{width:calc(100% - 18px);margin:14px auto 42px}.kb-card{border-radius:16px}.kb-article{padding:20px 16px}h1{font-size:30px;line-height:1.25}.kb-lead{font-size:16px}.kb-article h2{font-size:23px;margin-top:34px}.kb-article h3{font-size:19px}.kb-article p,.kb-article li{font-size:16px;line-height:1.85}.kb-links{display:none}.diagram{font-size:12.5px;padding:14px}.callout{padding:15px 16px}}
+  </style>
+  <script>
+    (function(){try{var saved=localStorage.getItem('theme');if(saved){var v=JSON.parse(saved);if(v&&v.value)document.documentElement.setAttribute('data-theme',v.value)}}catch(e){}})();
+  </script>
+</head>
+<body>
+  <nav class="kb-nav">
+    <a class="kb-brand" href="/"><i class="fas fa-robot"></i>&nbsp; Tutu Robotics Lab</a>
+    <div class="kb-links"><a href="/">首页</a><a href="/archives/">归档</a><a href="/categories/">分类</a><a href="/project">项目</a><a href="/about/">关于</a></div>
+  </nav>
+  <main class="kb-page">
+    <article class="kb-card kb-article" id="article-container">
+      <span class="kb-eyebrow"><i class="fas fa-brain"></i> 机器人 · 强化学习 · 运动控制</span>
+      <h1>强化学习与机器人运动控制：从传统控制到四足机器人 Sim2Real</h1>
+      <p class="kb-lead">这篇笔记来自一次机器人运动控制技术培训，并在原始讨论基础上做了工程化整理与概念校正。目标不是复述会议，而是建立一套可以长期复用的知识框架：机器人为什么需要传统控制、强化学习解决什么问题、奖励函数如何影响行为，以及策略如何从仿真真正部署到机器人。</p>
+      <div class="kb-meta"><span><i class="far fa-calendar-alt"></i> 2026-08-24</span><span><i class="far fa-clock"></i> 约 18 分钟</span><span><i class="fas fa-layer-group"></i> 知识沉淀</span></div>
+
+      <div class="callout good"><strong>一句话结论：</strong>机器人并不是“传统控制”和“强化学习”二选一。实际工程更常见的是分层组合：底层电机环路保证确定性和高频实时性，上层运动控制负责约束与协调，强化学习 Policy 负责在复杂状态空间中产生更灵活的动作策略。</div>
+
+      <h2 id="map">1. 先建立整体技术地图</h2>
+      <p>机器人智能控制可以从两个维度理解：一是“学习方法”，二是“控制层级”。把这两个维度分开后，很多容易混淆的概念会清晰很多。</p>
+      <pre class="diagram">人工智能 AI
+└─ 机器学习 Machine Learning
+   ├─ 传统机器学习：SVM / 聚类 / 树模型 ...
+   ├─ 深度学习 Deep Learning：神经网络自动学习表示
+   └─ 强化学习 Reinforcement Learning：通过交互与奖励学习策略
+      └─ 深度强化学习 Deep RL：用深度网络表示 Policy / Value</pre>
+      <p>在机器人系统中，另一个重要维度是控制层级：</p>
+      <pre class="diagram">任务 / AI 决策层
+        ↓
+运动策略 Policy / 行为生成
+        ↓
+运动控制：MPC / WBC / IK / 轨迹规划
+        ↓
+关节伺服：位置环 / 速度环 / 力矩环
+        ↓
+电机控制：FOC / 电流环
+        ↓
+执行器与机械系统</pre>
+
+      <h2 id="ml-dl-rl">2. 机器学习、深度学习、强化学习到底差在哪</h2>
+      <h3>2.1 传统机器学习</h3>
+      <p>传统机器学习通常需要较多人工特征工程，例如先提取频域特征、纹理特征、统计量，再交给 SVM、随机森林、聚类等算法。它<strong>同样存在训练过程</strong>，只是模型规模和特征学习能力通常比深度网络弱。</p>
+      <h3>2.2 深度学习</h3>
+      <p>深度学习通过多层神经网络直接从数据中学习表示。训练的核心是定义目标函数，通过反向传播和优化算法不断调整网络参数，使损失下降。</p>
+      <h3>2.3 强化学习</h3>
+      <p>强化学习的关键不在于“有没有数据”，而在于数据是通过智能体与环境交互产生的。智能体观察状态，执行动作，环境返回下一状态和奖励，算法再据此更新策略。</p>
+      <pre class="diagram">State s_t → Agent / Policy → Action a_t
+   ↑                         ↓
+   └──── Reward r_t + State s_(t+1) ← Environment</pre>
+      <div class="callout"><strong>理解重点：</strong>监督学习更像“有标准答案的练习题”；强化学习更像“在游戏里不断尝试，并根据得分学习怎样通关”。</div>
+
+      <h2 id="traditional">3. 传统机器人控制为什么仍然非常重要</h2>
+      <p>传统控制依赖数学模型、约束、状态反馈和优化方法。它的优势是行为可解释、实时性明确、约束可控，非常适合机器人底层和安全关键环节。</p>
+      <div class="table-wrap"><table><thead><tr><th>方法</th><th>核心作用</th><th>机器人中的典型位置</th></tr></thead><tbody><tr><td>PID</td><td>根据误差闭环调节</td><td>电机位置、速度、力矩等伺服环</td></tr><tr><td>MPC</td><td>基于模型预测未来并在线优化</td><td>轨迹跟踪、质心运动、足端约束</td></tr><tr><td>WBC</td><td>同时协调多个自由度与任务约束</td><td>四足/人形全身运动控制</td></tr><tr><td>轨迹规划</td><td>生成连续、满足约束的目标轨迹</td><td>关节、足端、机械臂路径</td></tr></tbody></table></div>
+      <p>以四足机器人为例，传统步态可以明确规定对角腿交替、足端摆动轨迹、落脚位置和步频。这样做的优点是规则清晰，但遇到复杂地形、未知扰动时，需要越来越多的模型与规则来覆盖。</p>
+
+      <h2 id="pid-foc">4. PID、FOC 与强化学习为什么不在同一层竞争</h2>
+      <p>培训讨论中有一个很有价值的问题：既然强化学习能够学习策略，是否“万物皆可强化学习”，甚至直接替代电机控制？</p>
+      <p>工程上通常不这样做。底层电机控制要求高频、确定、可验证。FOC 的控制周期通常是 kHz 到几十 kHz 量级，MCU 主频则可能达到数百 MHz；这里真正关键的是<strong>控制回路的确定性和低延迟</strong>，而不是单纯模型是否聪明。</p>
+      <div class="callout warn"><strong>概念校正：</strong>“FOC 按 MHz 频率闭环”容易把 MCU 时钟频率与控制环更新频率混为一谈。实际系统中 PWM/电流环常在 kHz～几十 kHz 范围，具体取决于电机、驱动器与控制器设计。</div>
+      <p>因此一个更稳妥的工程结构是：</p>
+      <pre class="diagram">强化学习 Policy：给出期望动作 / 目标
+            ↓ 50~500 Hz（示例）
+运动控制层：约束、状态估计、全身协调
+            ↓
+关节伺服：PID / 力矩环
+            ↓ kHz 级
+FOC / 电流环
+            ↓
+电机</pre>
+
+      <h2 id="quadruped">5. 强化学习为什么特别适合四足机器人运动</h2>
+      <p>四足机器人有多个关节、接触切换、非线性动力学和不确定地面。完全依靠人工规则覆盖所有状态非常困难。强化学习的优势恰好在于：它可以在高维状态空间里，通过大量试错搜索一个能获得高累计奖励的策略。</p>
+      <p>典型策略输入可能包括关节角、关节速度、机身姿态、角速度、期望速度等；输出可以是关节目标位置、目标速度或目标力矩。</p>
+      <div class="chips"><span class="chip">速度跟随</span><span class="chip">平衡恢复</span><span class="chip">抗扰动</span><span class="chip">复杂地形</span><span class="chip">步态协调</span></div>
+
+      <h2 id="reward">6. Reward Function：强化学习最关键的“行为定义”</h2>
+      <p>奖励函数不是简单的“走得越远分越高”，而是在告诉智能体：哪些行为值得保留，哪些行为需要被抑制。四足机器人常见奖励项包括：</p>
+      <ul><li><strong>速度跟随：</strong>实际线速度、角速度接近期望指令。</li><li><strong>姿态稳定：</strong>机身保持合理俯仰与横滚。</li><li><strong>足端行为：</strong>摆动腿抬到合理高度，支撑腿避免无意义滑动。</li><li><strong>对称性：</strong>左右腿动作保持合理镜像或节律。</li><li><strong>能耗与平滑：</strong>限制过大力矩、关节加速度和动作突变。</li><li><strong>生存奖励：</strong>避免摔倒、翻转和异常接触。</li></ul>
+      <p>奖励项之间可能互相冲突。例如“转向时鼓励抬腿”和“直行时减少抬腿”对应不同目标，这也是奖励设计需要反复调试的原因。</p>
+
+      <h2 id="simulation">7. 为什么训练主要发生在仿真环境</h2>
+      <p>真实机器人训练成本高：摔倒会损坏机械件，电机和减速器会磨损，大量重复实验也很耗时。物理仿真可以把大量试错转移到 GPU 上，并且并行运行很多机器人实例。</p>
+      <p>常见平台包括 Isaac Gym / Isaac Lab / Isaac Sim、MuJoCo、Gazebo 等。环境中可以配置：</p>
+      <ul><li>重力、摩擦系数、质量和惯量；</li><li>关节阻尼、执行器响应；</li><li>平地、坡面、碎石、楼梯等地形；</li><li>随机外力和碰撞；</li><li>传感器和执行器噪声。</li></ul>
+      <div class="callout"><strong>训练效率：</strong>训练时关闭可视化通常会明显提高仿真吞吐量，因为 GPU/CPU 不再承担画面渲染，计算资源可以更多地用于物理仿真和策略更新。</div>
+
+      <h2 id="sim2real">8. Sim2Real：真正困难的是从仿真走到真实世界</h2>
+      <p>仿真永远只是现实的近似。机器人落地时会面对建模误差、电机死区、摩擦变化、结构柔性、通信延迟和传感器噪声。强化学习策略如果只“背熟”一个精确仿真环境，真实部署往往会失败。</p>
+      <h3>8.1 域随机化（Domain Randomization）</h3>
+      <p>训练阶段主动随机化物理参数，例如摩擦系数、质量、质心、外力、关节误差、噪声和时延，让策略无法依赖某一个固定环境。</p>
+      <pre class="diagram">每次 Reset / 每批环境
+  ├─ 摩擦系数随机
+  ├─ 质量与惯量随机
+  ├─ 关节偏差随机
+  ├─ 传感噪声随机
+  └─ 外力方向/大小随机
+          ↓
+Policy 学到对参数变化更鲁棒的行为</pre>
+      <h3>8.2 扰动训练</h3>
+      <p>训练过程中周期性施加随机方向和随机大小的推力，可以训练机器人在受扰后恢复质心速度、姿态和支撑状态。这样得到的策略通常比只在“完美环境”训练的策略更抗干扰。</p>
+
+      <h2 id="curriculum">9. Curriculum Learning：把复杂任务拆成“关卡”</h2>
+      <p>直接把楼梯、斜坡、扰动、速度跟随全部塞给一个随机初始化策略，可能导致学习难度过高。课程学习的思想是：先解决简单任务，再逐步提高难度。</p>
+      <pre class="diagram">阶段 1：平地稳定站立/行走
+      ↓
+阶段 2：扩大速度范围 + 小扰动
+      ↓
+阶段 3：坡面 / 不同摩擦
+      ↓
+阶段 4：楼梯 / 越野 / 更强扰动</pre>
+      <p>它与深度学习里的“预训练再微调”在直觉上相似：前一阶段学习到的能力可以作为下一阶段的初始策略，但强化学习中的数据仍然由当前策略与环境交互产生。</p>
+
+      <h2 id="imitation">10. 模仿学习：专家示范与策略学习之间的桥梁</h2>
+      <p>模仿学习给机器人提供专家轨迹，让策略先学会“像专家一样做”，再通过强化学习进一步优化。它特别适合机器人操作和人形动作，因为从完全随机动作开始探索往往代价很大。</p>
+      <pre class="diagram">专家演示 / 动捕 / 遥操作
+          ↓
+Behavior Cloning / Imitation
+          ↓
+获得可用初始策略
+          ↓
+Reinforcement Learning 继续优化</pre>
+
+      <h2 id="perception">11. 从“盲走”到感知运动：视觉、雷达、触觉如何接入</h2>
+      <p>只使用本体状态的运动策略，本质上像“闭着眼睛走路”。机器人可以依靠 IMU、关节状态维持平衡，但面对楼梯边缘、落脚区域、障碍物等需要提前感知的场景，就必须引入外部感知。</p>
+      <p>完整系统可以理解为：</p>
+      <pre class="diagram">                 AI / 任务决策（大脑）
+                        ↓
+      ┌─────────────────┼─────────────────┐
+      ↓                 ↓                 ↓
+运动控制（小脑）      感知            定位与导航
+      ↓          相机/雷达/触觉       SLAM / Path
+执行器与机械体          ↓                 ↓
+      └────────────── 信息融合 ────────────┘</pre>
+      <p>短期可采用“视觉识别场景 → 自动切换不同运动策略”的架构；更进一步则可以把深度图、高程图等感知信息直接作为策略输入，让一个策略根据地形主动调整落脚点。</p>
+
+      <h2 id="multi-policy">12. 多策略还是一个大 Policy？</h2>
+      <p>平地、楼梯、越野和抗扰可能使用独立策略，也可能训练进一个统一策略。这里并不是简单由“参数量大小”决定，更关键的是任务分布、观测信息是否充分、奖励是否兼容以及训练是否稳定。</p>
+      <div class="table-wrap"><table><thead><tr><th>方案</th><th>优点</th><th>难点</th></tr></thead><tbody><tr><td>多策略切换</td><td>训练简单、每个策略目标明确</td><td>需要可靠的场景识别和切换逻辑</td></tr><tr><td>统一策略</td><td>切换自然、系统更统一</td><td>训练分布复杂，奖励和观测设计更困难</td></tr><tr><td>分层策略</td><td>高层选技能，低层执行技能</td><td>需要设计技能库和层级接口</td></tr></tbody></table></div>
+
+      <h2 id="world-model">13. 世界模型与机器人强化学习</h2>
+      <p>世界模型可以理解为：模型内部学习“环境如何演化”。如果机器人能预测“执行这个动作后下一刻会发生什么”，它就可以在内部进行想象、规划和评估。</p>
+      <p>它和强化学习关系很紧密，但并不是简单属于某一个单一类别。现代世界模型通常会使用深度学习来学习状态表示和动力学，再与规划或强化学习结合。</p>
+      <div class="callout good"><strong>值得继续学习：</strong>Model-based RL、Dreamer、Latent Dynamics、Vision-Language-Action、具身世界模型，都是从“只学动作策略”向“学习环境规律并规划”扩展的重要方向。</div>
+
+      <h2 id="engineering">14. 从工程角度得到的几条结论</h2>
+      <ol><li><strong>强化学习不是替代控制理论。</strong>机器人越靠近硬件底层，越强调确定性、实时性和可验证性。</li><li><strong>Reward 是需求规格的一部分。</strong>奖励写得不清楚，策略会找到“看起来得分高但并非我们真正想要”的行为。</li><li><strong>Sim2Real 不是训练后的最后一步，而应从训练设计阶段就考虑。</strong></li><li><strong>感知决定了运动策略能看到多少世界。</strong>没有地形观测，再强的策略也无法提前知道前方是台阶还是坑。</li><li><strong>调试方法仍然是核心能力。</strong>训练曲线、观测量、奖励分项、接触力、质心状态、关节输出都需要可视化和逐层验证。</li></ol>
+
+      <h2 id="roadmap">15. 推荐的学习路线</h2>
+      <pre class="diagram">机器人基础
+  ├─ 运动学 / 动力学
+  ├─ PID / 状态空间 / 优化
+  └─ Linux + Python + C/C++
+        ↓
+仿真
+  ├─ URDF / MJCF
+  ├─ MuJoCo / Isaac Lab
+  └─ 传感器、接触、执行器模型
+        ↓
+强化学习
+  ├─ MDP / Policy / Value
+  ├─ PPO / Actor-Critic
+  ├─ Reward Design
+  └─ Domain Randomization
+        ↓
+机器人运动控制
+  ├─ Locomotion
+  ├─ State Estimation
+  ├─ Sim2Real
+  └─ 感知运动 Perceptive Locomotion</pre>
+      <p>对于实际机器人研发，建议不要只学算法论文，而是从一个可运行的小闭环开始：先让模型在仿真中稳定站立，再做速度跟随，再加随机扰动，最后再做真实机器人部署。每一步都要有可观测指标。</p>
+
+      <h2 id="summary">16. 总结</h2>
+      <p>机器人智能运动控制的发展并不是“传统控制 → 强化学习 → 全部由 AI 接管”的线性替代，而是不同技术在不同层级逐渐融合。传统控制提供稳定可靠的底座，深度学习提供强大的表示能力，强化学习提供基于交互的策略优化能力，感知与世界模型则让机器人开始理解更复杂的环境。</p>
+      <pre class="diagram">大脑：任务理解、决策、规划
+            ↓
+小脑：运动策略、平衡、协调
+            ↓
+神经与反射：实时控制、状态反馈
+            ↓
+身体：电机、关节、机械结构、传感器</pre>
+      <p>真正有价值的能力，是能把这些层级串成一个稳定、可调试、可验证的机器人系统。</p>
+
+      <a class="back-home" href="/"><i class="fas fa-arrow-left"></i> 返回博客首页</a>
+      <div class="footer-note">说明：本文由培训原始记录整理为公开知识笔记，省略了具体内部项目、设备参数和非必要业务信息，并对部分科普表述做了技术校正，便于长期学习与复用。</div>
+    </article>
+    <aside class="kb-card kb-aside">
+      <h3><i class="fas fa-list-ul"></i>&nbsp; 本文目录</h3>
+      <nav class="kb-toc"><a href="#map">1. 技术地图</a><a href="#ml-dl-rl">2. ML / DL / RL</a><a href="#traditional">3. 传统控制</a><a href="#pid-foc">4. PID / FOC</a><a href="#quadruped">5. 四足机器人</a><a href="#reward">6. 奖励函数</a><a href="#simulation">7. 仿真训练</a><a href="#sim2real">8. Sim2Real</a><a href="#curriculum">9. 课程学习</a><a href="#imitation">10. 模仿学习</a><a href="#perception">11. 感知运动</a><a href="#multi-policy">12. 多策略</a><a href="#world-model">13. 世界模型</a><a href="#engineering">14. 工程结论</a><a href="#roadmap">15. 学习路线</a><a href="#summary">16. 总结</a></nav>
+    </aside>
+  </main>
+</body>
+</html>
