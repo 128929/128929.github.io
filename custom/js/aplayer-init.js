@@ -14,6 +14,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 项目展示页使用独立配色，不影响首页、文章页和分类页。
+  // 给 body 增加专用类后再加载 project-theme.css，方便后续单独迭代项目页视觉效果。
+  const enableProjectTheme = () => {
+    const pathname = window.location.pathname.replace(/\/+$/, '');
+    if (pathname !== '/project') return;
+
+    document.body.classList.add('project-page');
+
+    if (!document.getElementById('project-theme-css')) {
+      const link = document.createElement('link');
+      link.id = 'project-theme-css';
+      link.rel = 'stylesheet';
+      link.href = '/custom/css/project-theme.css';
+      document.head.appendChild(link);
+    }
+  };
+
+  enableProjectTheme();
+
   // 首页补充“强化学习与机器人运动控制”知识沉淀文章。
   // 当前仓库保存的是静态生成后的页面，因此这里通过前端注入方式
   // 保证文章能够立即出现在首页和“最新文章”区域，不依赖重新执行 Hexo generate。
