@@ -1,0 +1,192 @@
+/* =========================================================
+   项目展示页专用配色
+   仅在 js 给 body 添加 project-page 类后生效，不影响博客其它页面。
+   ========================================================= */
+
+body.project-page {
+  --project-bg: #07111f;
+  --project-panel: rgba(11, 25, 46, 0.88);
+  --project-panel-strong: rgba(14, 32, 57, 0.96);
+  --project-card: rgba(13, 29, 51, 0.78);
+  --project-border: rgba(100, 174, 255, 0.18);
+  --project-border-hover: rgba(103, 205, 255, 0.38);
+  --project-text: #e7eef9;
+  --project-muted: #9fb0c5;
+  --project-blue: #6cb7ff;
+  --project-cyan: #58d5e8;
+  --project-violet: #9f91ff;
+  --project-green: #62d6ad;
+}
+
+/* 页面主内容与全站深蓝背景保持一致，避免灰白块显得突兀。 */
+body.project-page #page {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(66, 133, 244, 0.10), transparent 34%),
+    radial-gradient(circle at 90% 5%, rgba(126, 108, 255, 0.08), transparent 30%),
+    linear-gradient(145deg, var(--project-panel-strong), var(--project-panel)) !important;
+  border: 1px solid var(--project-border) !important;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.28) !important;
+  color: var(--project-text) !important;
+}
+
+body.project-page #article-container {
+  color: var(--project-text) !important;
+}
+
+/* 页头“项目展示”改成更清晰的冰蓝白，不再使用过亮的彩虹渐变。 */
+body.project-page #page-header #site-title {
+  color: #eef7ff !important;
+  background: none !important;
+  -webkit-text-fill-color: #eef7ff !important;
+  text-shadow: 0 3px 18px rgba(15, 35, 64, 0.55) !important;
+  letter-spacing: 0.04em;
+}
+
+/* 正文主标题 */
+body.project-page #article-container > h1:first-of-type {
+  color: #f0f7ff !important;
+  background: none !important;
+  -webkit-text-fill-color: #f0f7ff !important;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--project-border);
+}
+
+body.project-page #article-container > h1:first-of-type::before {
+  color: var(--project-cyan) !important;
+}
+
+body.project-page #article-container > p:first-of-type {
+  color: var(--project-muted) !important;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+/* “项目列表”作为章节标题，采用克制的蓝紫强调色。 */
+body.project-page #article-container h2 {
+  margin-top: 30px;
+  color: #dbeafe !important;
+  background: none !important;
+  -webkit-text-fill-color: #dbeafe !important;
+}
+
+body.project-page #article-container h2::before {
+  color: var(--project-violet) !important;
+}
+
+/* 每个项目标题 */
+body.project-page #article-container h3 {
+  margin: 20px 0 0 !important;
+  padding: 14px 18px 12px 44px !important;
+  border: 1px solid var(--project-border);
+  border-bottom: 0;
+  border-radius: 14px 14px 0 0;
+  background: linear-gradient(90deg, rgba(68, 132, 221, 0.14), rgba(90, 213, 232, 0.035)) !important;
+  color: #edf6ff !important;
+  -webkit-text-fill-color: #edf6ff !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+}
+
+body.project-page #article-container h3::before {
+  left: 18px !important;
+  color: var(--project-cyan) !important;
+}
+
+/* 项目内容区域与标题组成一张卡片。 */
+body.project-page #article-container h3 + ul {
+  margin: 0 0 18px !important;
+  padding: 15px 20px 17px 42px !important;
+  border: 1px solid var(--project-border);
+  border-top: 1px solid rgba(100, 174, 255, 0.09);
+  border-radius: 0 0 14px 14px;
+  background: var(--project-card) !important;
+  color: var(--project-muted) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+  transition: border-color .22s ease, background .22s ease, transform .22s ease;
+}
+
+body.project-page #article-container h3:hover + ul,
+body.project-page #article-container h3 + ul:hover {
+  border-color: var(--project-border-hover);
+  background: rgba(15, 34, 60, 0.92) !important;
+}
+
+body.project-page #article-container h3 + ul li {
+  margin: 7px 0;
+  line-height: 1.75;
+  color: #b8c6d9 !important;
+}
+
+body.project-page #article-container h3 + ul li::marker {
+  color: var(--project-cyan) !important;
+}
+
+body.project-page #article-container strong {
+  color: #d9ebff !important;
+  font-weight: 700;
+}
+
+/* 项目外链用低饱和蓝色按钮感，降低原来刺眼的高亮。 */
+body.project-page #article-container a:not(.headerlink) {
+  color: var(--project-blue) !important;
+  text-decoration: none !important;
+}
+
+body.project-page #article-container h3 + ul a:not(.headerlink) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 2px 11px;
+  border: 1px solid rgba(108, 183, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(63, 133, 213, 0.10);
+  color: #8fcbff !important;
+}
+
+body.project-page #article-container h3 + ul a:not(.headerlink):hover {
+  border-color: rgba(88, 213, 232, 0.46);
+  background: rgba(88, 213, 232, 0.11);
+  color: #b9f2fb !important;
+}
+
+/* 右侧信息卡同步成同一套冷色深蓝，减少页面内颜色割裂。 */
+body.project-page #aside-content .card-widget {
+  border: 1px solid rgba(100, 174, 255, 0.13) !important;
+  background: rgba(10, 23, 42, 0.80) !important;
+  color: var(--project-muted) !important;
+}
+
+body.project-page #aside-content .item-headline,
+body.project-page #aside-content .author-info-name {
+  color: #e4effb !important;
+}
+
+body.project-page #aside-content .card-info #card-info-btn {
+  background: rgba(79, 157, 224, 0.18) !important;
+  border: 1px solid rgba(108, 183, 255, 0.24);
+  color: #d9edff !important;
+}
+
+body.project-page #aside-content .card-info #card-info-btn:hover {
+  background: rgba(88, 213, 232, 0.20) !important;
+}
+
+@media (max-width: 768px) {
+  body.project-page #page {
+    border-radius: 14px !important;
+  }
+
+  body.project-page #article-container h3 {
+    padding: 12px 14px 11px 39px !important;
+    border-radius: 12px 12px 0 0;
+  }
+
+  body.project-page #article-container h3::before {
+    left: 14px !important;
+  }
+
+  body.project-page #article-container h3 + ul {
+    padding: 13px 14px 15px 34px !important;
+    border-radius: 0 0 12px 12px;
+  }
+}
